@@ -21,10 +21,6 @@ var path = require('path');
 var semver = require('semver');
 var gitHelper = require('./git-helper');
 
-// if (semver.gt(process.versions.node, '6.11.5')) {
-//   throw Error('This project supports Node.js <= 6.11.5, please downgrade your Node.js version and try again. You have currently installed version ' + process.versions.node + '.');
-// }
-
 module.exports = function(grunt) {
   var
     DOCS_PATH = 'generated',
@@ -83,6 +79,7 @@ module.exports = function(grunt) {
             '!' + HOT_SRC_PATH + '/src/**/*.unit.js',
             '!' + HOT_SRC_PATH + '/src/**/*.e2e.js',
             '!' + HOT_SRC_PATH + '/src/3rdparty/walkontable/**/*.js',
+            '!' + HOT_SRC_PATH + '/src/helpers/dom/element.js',
             HOT_SRC_PATH + '/src/3rdparty/walkontable/src/cell/*.js',
           ],
           jsdoc: 'node_modules/.bin/' + (/^win/.test(process.platform) ? 'jsdoc.cmd' : 'jsdoc'),
