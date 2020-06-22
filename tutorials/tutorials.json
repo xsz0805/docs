@@ -114,7 +114,7 @@
             "title": "Moving"
           },
           "header-tooltips": {
-            "title": "Header tooltips",
+            "title": "Header tooltips [deprecated]",
             "pro": true
           },
           "pre-populating": {
