@@ -303,16 +303,6 @@
           }
         }
       },
-      "gantt-demos": {
-        "title": "Gantt chart",
-        "demo": true,
-        "children": {
-          "gantt-chart": {
-            "title": "Gantt chart [deprecated]",
-            "pro": true
-          }
-        }
-      },
       "react-framework": {
         "title": "Wrapper for React",
         "framework": true,
