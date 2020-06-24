@@ -114,7 +114,7 @@
             "title": "Moving"
           },
           "header-tooltips": {
-            "title": "Header tooltips",
+            "title": "Header tooltips [deprecated]",
             "pro": true
           },
           "pre-populating": {
@@ -152,6 +152,9 @@
           "nested-headers": {
             "title": "Nested headers",
             "pro": true
+          },
+          "nested-rows": {
+            "title": "Nested rows"
           },
           "dropdown-menu": {
             "title": "Dropdown menu",
@@ -290,20 +293,12 @@
           }
         }
       },
-      "experimental-demos": {
-        "title": "Experimental features",
+      "formulas-demos": {
+        "title": "Formulas",
         "demo": true,
         "children": {
-          "gantt-chart": {
-            "title": "Gantt chart",
-            "pro": true
-          },
           "formula-support": {
             "title": "Formula support",
-            "pro": true
-          },
-          "nested-rows": {
-            "title": "Nested rows",
             "pro": true
           }
         }
