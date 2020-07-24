@@ -339,11 +339,11 @@
       <p>The <code>dragRows</code> method comes with the <code>dropIndex</code> parameter. It directs where to <strong>place</strong> the dragged elements.
         The place you intend to drag the element is managed by <strong>drop indexes</strong>. You can imagine some sort of a drop zone between actual indexes of elements:</p>
 
-      ![drag](drag_action.svg "Drag")
+      <img src="images/drag_action.svg" alt="drag_action" />
 
       <p>The <code>moveRows</code> method comes with the <code>finalIndex</code> parameter. It tells where to <strong>overlap</strong> the first element from the moved ones. The place you intend to move the element is managed by <strong>visual indexes</strong>.</p>
 
-      ![move](move_action.svg "Move")
+      <img src="images/move_action.svg" alt="move_action" />
 
       <p>Please note that in case of <code>moveRows</code> some move actions are limited. For example, if you initiate a move of <strong>more than one element</strong> to the <strong>last position</strong> (visual index = the number of items) the operation will be canceled.
       The first element in the collection you would like to move will try to reach the last position (<code>finalIndex</code>) which is feasible. However, the next ones will attempt to reach the position exceeding the number of all items.</p>
@@ -374,11 +374,11 @@
 
       <p>The results before:</p>
 
-      ![spare_before](spare_before_8.svg)
+      <img src="images/spare_before_8.svg" alt="before_8" />
 
       <p>The results after:</p>
 
-      ![spare_after](spare_after_8.svg)
+      <img src="images/spare_after_8.svg" alt="after_8" />
 
       <p>To ensure your application works as expected you should review it and search the use cases of <code>minSpareRows</code> or <code>minRows</code>, if the application relied on this mechanism you may need to adapt it.
         For example, in prior versions the following code:</p>
@@ -496,11 +496,11 @@
 
       <p>It used to select just one cell:</p>
 
-      ![LMB_was](LMB_was.gif)
+      <img src="images/LMB_was.gif" alt="LMB_was">
 
       <p>Now the expected behavior is to select all cells:</p>
 
-      ![LMB_is](LMB_is.gif)
+      <img src="images/LMB_is.gif" alt="LMB_is">
 
       <p>To keep the previous behavior you need to use the following workaround:</p>
       <pre>
