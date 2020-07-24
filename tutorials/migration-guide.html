@@ -9,7 +9,7 @@
       <h3>Context</h3>
       <p>
         In previous versions of Handsontable, the relation between physical and visual indexes was based on callbacks between plugins.
-        However, over the years we have added more and more features to Handsontable, which eventually caused a growing number of issues and imperfections in index translations. 
+        However, over the years we have added more and more features to Handsontable, which eventually caused a growing number of issues and imperfections in index translations.
         To fix that we decided to rewrite part of the index mapping system and adapted plugins to use it.
         This version introduces a new index mapper that stores, manages, and registers the indexes globally. Under the hood, it is indirectly responsible for managing both rows and columns and acts as a single source of truth. This single modification required us to make some backward-incompatible changes, which are outlined further in this document.
       </p>
@@ -278,6 +278,7 @@
 
       <p>After:</p>
       <pre>
+        <code class="lang-js">
         collapsibleColumns: true,
         hiddenColumns: true
         </code>
@@ -286,10 +287,11 @@
       <h3>Data reference and ObserveChanges plugin </h3>
 
      <p>Modifying the table’s data by reference and calling <code>render</code> is no longer feasible. Now all the data-related operations need to be performed using the API methods such as <code>populateFromArray</code> or <code>setDataAtCell</code>.
-      There is a way to still modify the data by reference and have it rendered but you need to enable <code>ObserveChanges</code> plugin. <strong>It is not recommended though</strong> and you should use core API methods.</p>>
+      There is a way to still modify the data by reference and have it rendered but you need to enable <code>ObserveChanges</code> plugin. <strong>It is not recommended though</strong> and you should use core API methods.</p>
 
       <p>Instead of setting data directly:</p>
       <pre>
+        <code class="lang-js">
         data[rowIndex][columnIndex] = 'New Cell Value';
         </code>
       </pre>
@@ -297,6 +299,7 @@
       <p>You should use <code>setSourceDataAtCell</code>:</p>
       <p>Instead of setting data directly:</p>
       <pre>
+        <code>
         hotInstance.setSourceDataAtCell(rowIndex, columnIndex, 'New Cell Value');
         </code>
       </pre>
@@ -304,16 +307,18 @@
       <p><code>modifySourceData</code> hook was added and its behavior is similar to <code>modifyData</code> but it is called each time the <strong>source</strong> data is requested.
       The source data API was changed as well and it will no longer return a reference to the source data object. Instead, it returns a copy of the data, possibly already modified by the <code>modifySourceData</code> and <code>modifyRowData</code> hooks.
       The change applies to all "getter" source methods - <code>getSourceData</code>, <code>getSourceDataAtCell</code>, <code>getSourceDataAtRow</code>, <code>getSourceDataAtCol</code> and <code>getSourceDataArray</code>.
-      Since it breaks the link to original data source reference, `setSourceDataAtCell` and `afterSetSourceDataAtCell` were introduced to maintain a similar functionality.</p>
+      Since it breaks the link to original data source reference, <code>setSourceDataAtCell</code> and <code>afterSetSourceDataAtCell</code> were introduced to maintain a similar functionality.</p>
 
       <p>Before to get source data:</p>
       <pre>
+        <code class="lang-js">
         hotInstance.getSourceData()[0][0] = 'A1';
         </code>
       </pre>
 
       <p>Now:</p>
       <pre>
+        <code class="lang-js">
         hotInstance.setSourceDataAtCell(0,0,'A1');
         </code>
       </pre>
@@ -326,223 +331,255 @@
       <p>There is also a significant change inside <code>ManualRowMove</code> plugin. It has been adapted to work with Index Mappers and physical indexes inside array should be mapped to visual indexes.
       From this version onward, the <code>target</code> argument is called <code>finalIndex</code>. <code>beforeRowMove</code> and <code>afterRowMove</code> hooks were added as extra parameters.</p>
 
-      The `moveRows` method works differently now and a **new `dragRows` method overtook its place in terms of functionality**.
-      To put it bluntly, if you want to preserve previous functionality of `moveRows` rename it to the `dragRows`.
-      
-      <-- this should be displayed as a tip
-      **Important note!** If `NestedRows` is set to `enabled` the move is possible only by the drag in the UI or `dragRow`/`dragRows` methods of the `ManualRowMove` plugin.
-      -->
-      
-      The `dragRows` method comes with the `dropIndex` parameter. It directs where to **place** the dragged elements. The place you intend to drag the element is managed by **drop indexes**. You can imagine some sort of a drop zone between actual indexes of elements:
-      
+      <p>The <code>moveRows</code> method works differently now and a new <code>dragRows</code> method overtook its place in terms of functionality**.
+      To put it bluntly, if you want to preserve previous functionality of <code>moveRows</code> rename it to the <code>dragRows</code>.</p>
+
+      <p><strong>Important note!</strong> If <code>NestedRows</code> is set to <code>enabled</code> the move is possible only by the drag in the UI or <code>dragRow</code>/<code>dragRows</code> methods of the <code>ManualRowMove</code> plugin.</p>
+
+      <p>The <code>dragRows</code> method comes with the <code>dropIndex</code> parameter. It directs where to <strong>place</strong> the dragged elements.
+        The place you intend to drag the element is managed by <strong>drop indexes</strong>. You can imagine some sort of a drop zone between actual indexes of elements:</p>
+
       ![drag](drag_action.svg "Drag")
-      
-      The `moveRows` method comes with the `finalIndex` parameter. It tells where to **overlap** the first element from the moved ones. The place you intend to move the element is managed by **visual indexes**.
-      
+
+      <p>The <code>moveRows</code> method comes with the <code>finalIndex</code> parameter. It tells where to <strong>overlap</strong> the first element from the moved ones. The place you intend to move the element is managed by <strong>visual indexes</strong>.</p>
+
       ![move](move_action.svg "Move")
-      
-      Please note that in case of `moveRows` some move actions are limited. For example, if you initiate a move of **more than one element** to the **last position** (visual index = the number of items) the operation will be canceled.
-      The first element in the collection you would like to move will try to reach the last position (`finalIndex`) which is feasible. However, the next ones will attempt to reach the position exceeding the number of all items.
-      
+
+      <p>Please note that in case of <code>moveRows</code> some move actions are limited. For example, if you initiate a move of <strong>more than one element</strong> to the <strong>last position</strong> (visual index = the number of items) the operation will be canceled.
+      The first element in the collection you would like to move will try to reach the last position (<code>finalIndex</code>) which is feasible. However, the next ones will attempt to reach the position exceeding the number of all items.</p>
+
       You can find The plugin's `isMovePossible` API method useful when you want to determine if the move action is possible. `movePossible` parameter of `beforeRowMove` and `afterRowMove` hooks may be helpful as well.
-      
-      
-      ### Changes in ManualColumnFreeze plugin behavior
-      
-      The `ManualColumnFreeze` plugin itself also works differently. Before the `8.0.0v` frozen columns attempted to go back to original positions upon the unfreeze. Currently, the original position is **not calculated**. It unfreezes the column just after the "line of freeze". The functionality changed because after several actions like `moving` the former position was rather estimated than determined.
-      
-      ### Using minSpareRows option with TrimRows plugin
-      Another breaking change is related to `minSpareRows` and `minRows`. The difference is visible when the data is being trimmed (i.e. by the `TrimRows` plugin) and the options are set. In previous versions the data which was supposed to be trimmed **included** `minSpareRows` and `minRows` which resulted in trimming them along with other rows. In version 8.0.0  **spare rows** are always present and cannot be removed by trimming.
-      
-      Check the following code example:
-      ```javascript
-      var hotInstance = new Handsontable(container, {
-        data: Handsontable.helper.createSpreadsheetData(5, 5),
-        minSpareRows: 2,
-        trimRows: [1, 2, 3, 4]
-      });
-      ```
-      
-      The results before:
-      
-      ![spare_before](spare_before.svg)
-      
-      The results after:
-      
-      ![spare_after](spare_after.svg)
-      
-      To ensure your application works as expected you should review it and search the use cases of `minSpareRows` or `minRows`, if the application relied on this mechanism you may need to adapt it. For example, in prior versions the following code:
-      
-      ```javascript
-      const hotInstance = new Handsontable(container, {
-        data: Handsontable.helper.createSpreadsheetData(10, 10),
-        trimRows: [0],
-        minSpareRows: 2
-      }
-      ```
-      rendered `0` spare rows. If you want to keep it that way you may need a workaround, for instance:
-      
-      ```javascript
-      const hotInstance = new Handsontable(container, {
-        data: Handsontable.helper.createSpreadsheetData(10, 10),
-        trimRows: [0],
-        beforeCreateRow(index, amount, source) {
-          const rowIndexMapper = this.rowIndexMapper;
-          // If any row was skipped then block a creation of row execution.
-          if (source === 'auto' && rowIndexMapper.getNotSkippedIndexesLength() < rowIndexMapper.getNumberOfIndexes()) {
-            return false;
+
+      <h3>Changes in ManualColumnFreeze plugin behavior</h3>
+
+      <p>The <code>ManualColumnFreeze</code> plugin itself also works differently. Before the <strong>8.0.0v</strong>> frozen columns attempted to go back to original positions upon the unfreeze. Currently, the original position is <strong>not calculated</strong>.
+      It unfreezes the column just after the "line of freeze". The functionality changed because after several actions like <strong>moving</strong> the former position was rather estimated than determined.</p>
+
+      <h3> Using minSpareRows option with <code>TrimRows</code> plugin</h3>
+
+      <p>Another breaking change is related to <code>minSpareRows</code> and <code>minRows</code>. The difference is visible when the data is being trimmed (i.e. by the <code>TrimRows</code> plugin) and the options are set.
+      In previous versions the data which was supposed to be trimmed **included** <code>minSpareRows</code> and <code>minRows</code> which resulted in trimming them along with other rows.
+      In version 8.0.0  <strong>spare rows</strong> are always present and cannot be removed by trimming.</p>
+
+      <p>Check the following code example:</p>
+      <pre>
+        <code class="lang-js">
+        var hotInstance = new Handsontable(container, {
+          data: Handsontable.helper.createSpreadsheetData(5, 5),
+          minSpareRows: 2,
+          trimRows: [1, 2, 3, 4]
+        });
+        </code>
+      </pre>
+
+      <p>The results before:</p>
+
+      ![spare_before](spare_before_8.svg)
+
+      <p>The results after:</p>
+
+      ![spare_after](spare_after_8.svg)
+
+      <p>To ensure your application works as expected you should review it and search the use cases of <code>minSpareRows</code> or <code>minRows</code>, if the application relied on this mechanism you may need to adapt it.
+        For example, in prior versions the following code:</p>
+        <pre>
+          <code class="lang-js">
+            const hotInstance = new Handsontable(container, {
+              data: Handsontable.helper.createSpreadsheetData(10, 10),
+              trimRows: [0],
+              minSpareRows: 2
+            }
+          </code>
+        </pre>
+
+      <p>rendered `0` spare rows. If you want to keep it that way you may need a workaround, for instance:</p>
+      <pre>
+        <code class="lang-js">
+          const hotInstance = new Handsontable(container, {
+            data: Handsontable.helper.createSpreadsheetData(10, 10),
+            trimRows: [0],
+            beforeCreateRow(index, amount, source) {
+              const rowIndexMapper = this.rowIndexMapper;
+              // If any row was skipped then block a creation of row execution.
+              if (source === 'auto' && rowIndexMapper.getNotSkippedIndexesLength() < rowIndexMapper.getNumberOfIndexes()) {
+                return false;
+              }
+            },
+            minSpareRows: 2
+          });
+        </code>
+      </pre>
+
+      <h3> Custom editors </h3>
+
+      <p>Custom editors will now use data attribute to recognize the input as an editor. Before this change, Handsontable depended on the CSS <code>className</code>. And it had to be <code>handsontableInput</code>.
+      Now it is an attribute - <code>data-hot-input</code>. Focusable and editable elements must have this attribute set up to work properly. <code>ClassNames</code> were freed from restrictive names.</p>
+
+      An example with <code>data-hot-input</code> in Custom editor, to make it work properly on a focusable element:
+      <pre>
+        <code class="lang-js">
+          createElements() {
+            ...
+            this.TEXTAREA.className = 'handsontableInput';
+            ...
           }
-        },
-        minSpareRows: 2
-      });
-      ```
-      
-      ### Custom editors
-      
-      Custom editors will now use data attribute to recognize the input as an editor. Before this change, Handsontable depended on the CSS `className`. And it had to be `handsontableInput`. Now it is an attribute - `data-hot-input`. Focusable and editable elements must have this attribute set up to work properly. `ClassNames` were freed from restrictive names.
-      
-      An example with `data-hot-input` in Custom editor, to make it work properly on a focusable element:
-      
-      ```javascript
-      createElements() {
-        ...
-        this.TEXTAREA.className = 'handsontableInput';
-        ...
-      }
-      ```
-      
-      After the changes:
-      ```javascript
-      createElements() {
-        ...
-        this.TEXTAREA.className = 'anythingYouWant';
-        this.TEXTAREA.setAttribute('data-hot-input', true);
-        ...
-      }
-      ```
-      
-      
-      ### Indexes that exceed the data length
-      Also, the methods `toVisualRow`, `toVisualColumn` and `toPhysicalRow`, `toPhysicalColumn` used to return index numbers that exceeded the overall length. For example:
-      
-      ```javascript
-      // Data set with just 10 rows.
-      const physicalRow = hotInstance.toPhysicalRow(20);
-      // physicalRow === 20
-      ```
-      
-      From now on, if you want to refer to them you will receive `null`:
-      ```javascript
-      // Data set with just 10 rows.
-      const physicalRow = hotInstance.toPhysicalRow(20);
-      // physicalRow === null
-      ```
-      
-      It can be a breaking change for your project if any parts of it expected the output to be a `number`, now it will be `null`.
-      In case you still want to use it as before you need to, for example, check for `null`  and fallback to visual row index:
-      
-      ```javascript
-      const visualRow = 20;
-      const physicalRow = hotInstance.toPhysicalRow(visualRow) ?? visualRow;
-      // physicalRow === 20
-      ```
-      
-      ### RecordTranslator in plugins
-      The `RecordTranslator` object was removed, as a consequence, `t` property is no longer available in the plugins. This alias could be used to translate between visual and physical indexes with four methods:
-      `t.toVisualRow`, `t.toPhysicalRow`, `t.toVisualColumn`, `t.toPhysicalColumn`. It is advised to call the following methods directly on the instance: `hotInstance.toVisualRow`, `hotInstance.toPhysicalRow`, `hotInstance.toVisualColumn`, `hotInstance.toPhysicalColumn`. The mappers can be accessed using `hotInstance.rowIndexMapper` and `hotInstance.columnIndexMapper` properties.
-      
-      This example shows how to migrate plugins from using `t` property to calling the method directly on the instance:
-      
-      Before:
-      ```javascript
-      const physicalColumn = this.t.toPhysicalColumn(column);
-      ```
-      
-      After the change:
-      ```javascript
-        const physicalColumn = this.hot.toPhysicalColumn(column);
-      ```
-      
-      ### Selecting data
-      
-      **Left mouse button** click on the corner will select all cells with headers in 8.0.0.
-      
-      It used to select just one cell:
-      
+        </code>
+      </pre>
+
+      <p>After the changes:</p>
+      <pre>
+        <code class="lang-js">
+          createElements() {
+            ...
+            this.TEXTAREA.className = 'anythingYouWant';
+            this.TEXTAREA.setAttribute('data-hot-input', true);
+            ...
+          }
+        </code>
+      </pre>
+
+      <h3>Indexes that exceed the data length </h3>
+      <p>Also, the methods <code>toVisualRow</code>, <code>toVisualColumn</code> and <code>toPhysicalRow</code>, <code>toPhysicalColumn</code> used to return index numbers that exceeded the overall length. For example:</p>
+      <pre>
+        <code class="lang-js">
+          // Data set with just 10 rows.
+          const physicalRow = hotInstance.toPhysicalRow(20);
+          // physicalRow === 20
+        </code>
+      </pre>
+
+      <p>From now on, if you want to refer to them you will receive <code>null</code>:</p>
+      <pre>
+        <code class="lang-js">
+          // Data set with just 10 rows.
+          const physicalRow = hotInstance.toPhysicalRow(20);
+          // physicalRow === null
+        </code>
+      </pre>
+
+      <p>It can be a breaking change for your project if any parts of it expected the output to be a <code>number</code>, now it will be <code>null</code>.
+      In case you still want to use it as before you need to, for example, check for <code>null</code> and fallback to visual row index:</p>
+      <pre>
+        <code class="lang-js">
+          const visualRow = 20;
+          const physicalRow = hotInstance.toPhysicalRow(visualRow) ?? visualRow;
+          // physicalRow === 20
+        </code>
+      </pre>
+
+      <h3> RecordTranslator in plugins </h3>
+
+      <p>The <code>RecordTranslator</code> object was removed, as a consequence, <code>t</code> property is no longer available in the plugins. This alias could be used to translate between visual and physical indexes with four methods:
+      <code>t.toVisualRow</code>, <code>t.toPhysicalRow</code>, <code>t.toVisualColumn</code>, <code>t.toPhysicalColumn</code>. It is advised to call the following methods directly on the instance:
+      <code>hotInstance.toVisualRow</code>, <code>hotInstance.toPhysicalRow</code>, <code>hotInstance.toVisualColumn</code>, <code>hotInstance.toPhysicalColumn</code>.
+      The mappers can be accessed using <code>hotInstance.rowIndexMapper</code> and <code>hotInstance.columnIndexMapper</code> properties.</p>
+
+      <p>This example shows how to migrate plugins from using `t` property to calling the method directly on the instance:</p>
+
+      <p>Before:</p>
+      <pre>
+        <code class="lang-js">
+          const physicalColumn = this.t.toPhysicalColumn(column);
+        </code>
+      </pre>
+
+      <p>After the change:</p>
+      <pre>
+        <code class="lang-js">
+          const physicalColumn = this.hot.toPhysicalColumn(column);
+        </code>
+      </pre>
+
+      <h3>Selecting data </h3>
+
+      <p><strong>Left mouse button</strong> click on the corner will select all cells with headers in 8.0.0.</p>
+
+      <p>It used to select just one cell:</p>
+
       ![LMB_was](LMB_was.gif)
-      
-      Now the expected behavior is to select all cells:
-      
+
+      <p>Now the expected behavior is to select all cells:</p>
+
       ![LMB_is](LMB_is.gif)
-      
-      
-      To keep the previous behavior you need to use the following workaround:
-      
-      ```javascript
-      // manipulate the event that happens before the click on cells
-      beforeOnCellMouseDown(event, coords) {
-        // apply only for coordinates that are top left corner outside the grid
-        if (coords.col === -1 && coords.row === -1) {
-          // stop other event listeners of the same event from being called
-          event.stopImmediatePropagation();
-          // use the index mapper method - getVisualFromRenderableIndex on both row and column to choose visual indexes
-          // this will result in selecting the first cell in the corner
-          const visualRow = this.rowIndexMapper.getVisualFromRenderableIndex(0);
-          const visualColumn = this.columnIndexMapper.getVisualFromRenderableIndex(0);
-          this.selectCell(visualRow, visualColumn);
-        }
-      }
-      ```
-      ### Load data hooks arguments order
-      
-      Hook `afterLoadData` has been changed. Its first argument will present a **data source** that was set during the **load data** action. Now, a flag informing whether a load of data was done during initialization is the second argument. Also, a new corresponding hook, `beforeLoadData`, has been introduced, it is called before loading data.
-      
-      Before:
-      ```javascript
-      afterLoadData?: (initialLoad: boolean) => void;
-      ```
-      
-      Now:
-      ```javascript
-      afterLoadData?: (sourceData: object | void, initialLoad: boolean) => void;
-      ```
-      
-      `beforeLoadData` has the same order of arguments:
-      ```javascript
-      beforeLoadData?: (sourceData: object | void, initialLoad: boolean) => void;
-      ```
-      
-      ### Column and row resizing hooks arguments order
-      
-      `after*`  and `before*` hooks related to resizing changed in terms of the order of arguments. Now the first argument is a `newSize` of a row or column and the second argument is `column` or `row`. "Current" prefix was dropped because this hook might not always be called on selection.
-      
-      Here is the comparison:
-      
-      Prior 8.0.0:
-      ```javascript
-      afterColumnResize?: (currentColumn: number, newSize: number, isDoubleClick: boolean) => void;
-      afterRowResize?: (currentRow: number, newSize: number, isDoubleClick: boolean) => void;
-      beforeColumnResize?: (currentColumn: number, newSize: number, isDoubleClick: boolean) => void | number;
-      beforeRowResize?: (currentRow: number, newSize: number, isDoubleClick: boolean) => number | void;
-      ```
-      
-      Now:
-      ```javascript
-      afterColumnResize?: (newSize: number, column: number, isDoubleClick: boolean) => void;
-      afterRowResize?: (newSize: number, row: number, isDoubleClick: boolean) => void;
-      beforeColumnResize?: (newSize: number, column: number, isDoubleClick: boolean) => void | number;
-      beforeRowResize?: (newSize: number, row: number, isDoubleClick: boolean) => number | void;
-      ```
-      
-      ### Removals
-      
-      Hook `skipLengthCache` was removed because `indexMapper` is now responsible for the cache and length.
-      
+
+      <p>To keep the previous behavior you need to use the following workaround:</p>
+      <pre>
+        <code class="lang-js">
+          // manipulate the event that happens before the click on cells
+          beforeOnCellMouseDown(event, coords) {
+            // apply only for coordinates that are top left corner outside the grid
+            if (coords.col === -1 && coords.row === -1) {
+              // stop other event listeners of the same event from being called
+              event.stopImmediatePropagation();
+              // use the index mapper method - getVisualFromRenderableIndex on both row and column to choose visual indexes
+              // this will result in selecting the first cell in the corner
+              const visualRow = this.rowIndexMapper.getVisualFromRenderableIndex(0);
+              const visualColumn = this.columnIndexMapper.getVisualFromRenderableIndex(0);
+              this.selectCell(visualRow, visualColumn);
+            }
+          }
+        </code>
+      </pre>
+
+      <h3> Load data hooks arguments order</h3>
+
+      <p>Hook <code>afterLoadData</code> has been changed. Its first argument will present a <strong>data source</strong> that was set during the **load data** action.
+      Now, a flag informing whether a load of data was done during initialization is the second argument. Also, a new corresponding hook, <code>beforeLoadData</code>, has been introduced, it is called before loading data.</p>
+
+      <p>Before:</p>
+      <pre>
+        <code class="lang-js">
+          afterLoadData?: (initialLoad: boolean) => void;
+        </code>
+      </pre>
+
+      <p>Now:</p>
+      <pre>
+        <code class="lang-js">
+          afterLoadData?: (sourceData: object | void, initialLoad: boolean) => void;
+        </code>
+      </pre>
+
+      <p><code>beforeLoadData</code> has the same order of arguments:</p>
+      <pre>
+        <code class="lang-js">
+          beforeLoadData?: (sourceData: object | void, initialLoad: boolean) => void;
+        </code>
+      </pre>
+
+      <h3>Column and row resizing hooks arguments order</h3>
+
+      <p>`after*`  and `before*` hooks related to resizing changed in terms of the order of arguments. Now the first argument is a `newSize` of a row or column and the second argument is `column` or `row`.
+        "Current" prefix was dropped because this hook might not always be called on selection.</p>
+
+      <p>Here is the comparison:</p>
+
+      <p>Prior 8.0.0:</p>
+      <pre>
+        <code class="lang-js">
+          afterColumnResize?: (currentColumn: number, newSize: number, isDoubleClick: boolean) => void;
+          afterRowResize?: (currentRow: number, newSize: number, isDoubleClick: boolean) => void;
+          beforeColumnResize?: (currentColumn: number, newSize: number, isDoubleClick: boolean) => void | number;
+          beforeRowResize?: (currentRow: number, newSize: number, isDoubleClick: boolean) => number | void;
+        </code>
+      </pre>
+
+      <p>Now:</p>
+      <pre>
+        <code class="lang-js">
+          afterColumnResize?: (newSize: number, column: number, isDoubleClick: boolean) => void;
+          afterRowResize?: (newSize: number, row: number, isDoubleClick: boolean) => void;
+          beforeColumnResize?: (newSize: number, column: number, isDoubleClick: boolean) => void | number;
+          beforeRowResize?: (newSize: number, row: number, isDoubleClick: boolean) => number | void;
+        </code>
+      </pre>
+
+      <h3> Removals</h3>
+
+      <p>Hook `skipLengthCache` was removed because `indexMapper` is now responsible for the cache and length.
       Public methods `colOffset` and `rowOffset` were removed and their functionality is now for internal use only.
-      
       Also, an **experimental** feature: `ganttChart` plugin was removed and is no longer available.
-      
-      If you use these features in your project and need backward compatibility, please contact the support (at support@handsontable.com) for further information.      
+      If you use these features in your project and need backward compatibility, please contact the support (at support@handsontable.com) for further information.</p>
   </div>
   <p>
     <a href="https://github.com/handsontable/docs/edit/<?js= version ?>/tutorials/introduction.html"
