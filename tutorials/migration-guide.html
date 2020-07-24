@@ -3,7 +3,8 @@
       <h3>Migrating from 7 to 8</h3>
       <p>
         The purpose of this guide is to make it easier for you to update Handsontable to the 8.0.0 version.
-        We strongly recommend doing so to benefit from the improvements brought by the introduction of the completely new architecture for row and column management.
+        We strongly recommend doing so to benefit from the improvements brought by the introduction
+        of the completely new architecture for row and column management.
       </p>
       <h3>Context</h3>
       <p>
@@ -14,11 +15,11 @@
       </p>
       <h3>General guidelines</h3>
       <ul>
-          <li>Check if you use any of the features listed in the <code>Keywords</code> section, you need to address them first after the installation.</li>
+          <li>Check if you use any of the features listed in the <strong>Keywords</strong> section, you need to address them first after the installation.</li>
           <li>Be sure to test the proposed solutions for keeping backward compatibility, if you experience any problems do not hesitate to reach out to us.</li>
           <li>You can also check the release notes for a complete list of all changes.</li>
       </ul>
-      <h3>Keywords (alphabetically)</h3>>
+      <h3>Keywords (alphabetically)</h3>
       <ul>
         <li><code>addCondition </code></li>
         <li><code>afterFilter</code></li>
@@ -59,9 +60,465 @@
         <li><code>TrimRows</code></li>
         <li><code>unmodifyCol</code></li>
         <li><code>unmodifyRow</code></li>
+      </ul>
+    <h3>Installation</h3>
+    <p>Use this command to update the Handsontable to 8th version:
+      <code>npm install handsontable@8</code>
+    </p>
+    <h4>Using with wrappers</h4>
+      <p>If you use a wrapper you need to update it as well.</p>
+      <p>For the Handsontable with <strong>React</strong> run:</p>
+      <p><code>npm install handsontable@8 @handsontable/react@4</code></p>
+      <p>For the Handsontable with <strong>Vue</strong> run:</p>
+      <code>npm install handsontable @handsontable/vue@5</code>
 
+      <p>For the Handsontable with <strong>Angular</strong> run:</p>
+      <p><code>npm install handsontable@8 @handsontable/angular@6</code></p>
+    <h3>Breaking changes of 8.0.0</h3>
+    <h3>Removals of hooks</h3>
+    <p>Hooks related to the visual and physical indexes were removed since new architecture for indexes management was introduced.
+      To achieve the same functionality we suggest using the API. The following examples show how to preserve previous functionality.</p>
 
-    </ul>
+    <h4><code>modifyRow, unmodifyRow, modifyCol, unmodifyCol</code></h4>
+
+      <code>modify*</code>> and <code>unmodify*</code> hooks for rows and columns were removed. The actions to be taken are similar for both rows and columns.
+
+      <p>Prior 8.0.0 to move a row you could use <code>modifyRow</code>, for example:</p>
+    <pre>
+      <code class="lang-js">
+        modifyRow(row) {
+          if (row === 0) {
+            return 1;
+          }
+          if (row === 1) {
+            return 0;
+          }
+        }
+      </code>
+    </pre>
+      <p>In 8.0.0 it is no longer the case. To achieve the same functionality you need to use <code>rowIndexMapper</code></p>:
+      <pre>
+        <code class="lang-js">
+          hotInstance.rowIndexMapper.moveIndexes([1, 0], 0);
+          hotInstance.render()
+        </code>
+    </pre>
+      <p>Take look on the trimming example, too. It used to work like this:</p>
+      <pre>
+        <code class="lang-js">
+          data: Handsontable.helper.createSpreadsheetData(10, 10),
+          modifyRow(row) {
+            if (row < 9) {
+              return row + 1;
+            }
+            return null;
+          }
+        </code>
+    </pre>
+
+      <p>Now, if you want to get the same results you need to use the <code>TrimmingMap</code>:</p>
+      <pre>
+        <code class="lang-js">
+          import { TrimmingMap } from "handsontable/es/translations";
+          ...
+          const customTrimmingMap = new TrimmingMap();
+          hotInstance.rowIndexMapper.registerMap('customTrimmingMap', customTrimmingMap);
+          customTrimmingMap.setValueAtIndex(0, true); // trimming index 0
+          hotInstance.render();
+        </code>
+      </pre>
+
+      <p>Prior 8.0.0 to move a column you could use <code>modifyCol</code>, for example:</p>
+      <pre>
+        <code class="lang-js">
+          modifyCol(column) {
+            if (column === 0) {
+              return 1;
+            }
+            if (column === 1) {
+              return 0;
+            }
+          }
+        </code>
+      </pre>
+
+      <p>Now, similarily to moving rows, you have to use corresponding index mapper - <code>columnIndexMapper</code>:</p>
+      <pre>
+        <code class="lang-js">
+          hotInstance.columnIndexMapper.moveIndexes([1, 0], 0);
+          hotInstance.render();
+        </code>
+      </pre>
+
+      <h4><code>hiddenRow, hiddenColumn</code></h4>
+
+      <p>If you used <code>hiddenColumn</code> or <code>hiddenColumn</code> in your application you need do an update and use a correspinging index mapper:</p>
+
+      <p>Prior 8.0.0:</p>
+      <pre>
+        <code class="lang-js">
+          hot.hasHook('hiddenColumn') && hot.runHooks('hiddenColumn', visualColumn);
+        </code>
+      </pre>
+
+      <p>Now:</p>
+      <pre>
+        <code class="lang-js">
+          hot.columnIndexMapper.isHidden(hot.toPhysicalColumn(visualColumn));
+        </code>
+      </pre>
+
+      <p>An example for rows:</p>
+
+      <p>Prior 8.0.0:</p>
+      <pre>
+        <code class="lang-js">
+          hot.hasHook('hiddenRow') && hot.runHooks('hiddenRow', visualRow);
+        </code>
+      </pre>
+
+      <p>Now</p>
+      <pre>
+        <code class="lang-js">
+          hot.rowIndexMapper.isHidden(hot.toPhysicalRow(visualRow));
+        </code>
+      </pre>
+
+      <h3>Removing redundant <code>render()</code> from <code>after*</code> hooks</h3>
+
+      <p>The sequence of <code>after...</code> hooks changed, for example: <code>afterLoadData</code>, <code>afterFilter</code>, <code>afterUnmergeCells</code> are now called <strong>before the render</strong>>.
+        In the previous versions, you had to call <code>render</code> to apply changes made with <code>after...</code> hooks. In some cases, depending on the number of hooks
+        registered, it led to rendering all the cells multiple times. Many of these operations were redundant and unnecessary, resulting only in a performance bottleneck.
+      </p>
+
+      <p>From now on, you can alter the `Handsontable` instance in each hook and it will re-render only once. To benefit from this change you have to review all your hooks and remove unnecessary render calls. Example:</p>
+      <pre>
+        <code class="lang-js">
+          instance.addHook('afterFilter', function () {
+            // ... your operations
+            instance.render(); // <= remove this line!
+        </code>
+      </pre>
+
+      ### Plugins no longer enable other plugins
+      
+      From version 8.0.0 you can set plugins separately. They no longer rely on each other tightly in terms of functionality, so it is up to the developer to use them simultaneously when needed. You can avoid unwanted "extra" functionality switched on by a supporting plugin.
+      
+      `NestedRows` and `Filters` no longer use `TrimRows`. To preserve the same functionality as before you need to set them explicitly:
+      
+      Before 8.0.0
+      ```javascript
+      nestedRows: true
+      ```
+      ```javascript
+      filters: true
+      ```
+      
+      After:
+      ```javascript
+      nestedRows: true,
+      trimRows: true
+      ```
+      ```javascript
+      filters: true,
+      trimRows: true
+      ```
+      
+      `ManualColumnFreeze` does not rely on `manualColumnMove` plugin. To preserve the same functionality as before you need to set it explicitly:
+      
+      Before 8.0.0
+      ```javascript
+      manualColumnFreeze: true
+      ```
+      
+      After:
+      ```javascript
+      manualColumnFreeze: true,
+      manualRowMove: true
+      ```
+      
+      `ColumnSorting` will not enable `ObserveChanges`. To preserve the same functionality as before you need to set it explicitly:
+      
+      Before 8.0.0
+      ```javascript
+      columnSorting: true
+      ```
+      
+      After:
+      ```javascript
+      columnSorting: true,
+      observeChanges: true
+      ```
+      
+      `CollapsibleColumns` plugin no longer uses `hiddenColumns` hence the plugin will not be enabled. To preserve the same functionality as before you need to set it explicitly:
+      
+      Before 8.0.0
+      ```javascript
+      collapsibleColumns: true
+      ```
+      
+      After:
+      ```javascript
+      collapsibleColumns: true,
+      hiddenColumns: true
+      ```
+      
+      ### Data reference and ObserveChanges plugin
+      
+      Modifying the table’s data by reference and calling `render` is no longer feasible. Now all the data-related operations need to be performed using the API methods such as `populateFromArray` or `setDataAtCell`.
+      
+      There is a way to still modify the data by reference and have it rendered but you need to enable `ObserveChanges` plugin. **It is not recommended though** and you should use core API methods.
+      
+      Instead of setting data directly:
+      ```javascript
+      data[rowIndex][columnIndex] = 'New Cell Value';
+      ```
+      You should use `setSourceDataAtCell`:
+      ```javascript
+      hotInstance.setSourceDataAtCell(rowIndex, columnIndex, 'New Cell Value');
+      ```
+      
+      `modifySourceData` hook was added and its behavior is similar to `modifyData` but it is called each time the **source data** is requested.
+      
+      The source data API was changed as well and it will no longer return a reference to the source data object. Instead, it returns a copy of the data, possibly already modified by the `modifySourceData` and `modifyRowData` hooks. The change applies to all "getter" source methods - `getSourceData`, `getSourceDataAtCell`, `getSourceDataAtRow`, `getSourceDataAtCol` and `getSourceDataArray`.
+      
+      Since it breaks the link to original data source reference, `setSourceDataAtCell` and `afterSetSourceDataAtCell` were introduced to maintain a similar functionality.
+      
+      Before to get source data:
+      
+      ```javascript
+      hotInstance.getSourceData()[0][0] = 'A1';
+      ```
+      
+      Now:
+      
+      ```javascript
+      hotInstance.setSourceDataAtCell(0,0,'A1');
+      ```
+      
+      It is also worth to mention that `getSourceData` will return a clone of the entire dataset, when run without arguments  - `getSourceData()`. However, if a row/column range is provided: `getSourceData(0, 0, 10, 10)`, it will filter the dataset with the `columns` and/or `dataSchema` options, and return only the columns configured to be visible.
+      
+      ### Changes in ManualRowMove plugin behavior
+      
+      There is also a significant change inside `ManualRowMove` plugin. It has been adapted to work with Index Mappers and physical indexes inside array should be mapped to visual indexes. From this version onward, the `target` argument is called `finalIndex`. `beforeRowMove` and `afterRowMove` hooks were added as extra parameters.
+      
+      The `moveRows` method works differently now and a **new `dragRows` method overtook its place in terms of functionality**.
+      To put it bluntly, if you want to preserve previous functionality of `moveRows` rename it to the `dragRows`.
+      
+      <-- this should be displayed as a tip
+      **Important note!** If `NestedRows` is set to `enabled` the move is possible only by the drag in the UI or `dragRow`/`dragRows` methods of the `ManualRowMove` plugin.
+      -->
+      
+      The `dragRows` method comes with the `dropIndex` parameter. It directs where to **place** the dragged elements. The place you intend to drag the element is managed by **drop indexes**. You can imagine some sort of a drop zone between actual indexes of elements:
+      
+      ![drag](drag_action.svg "Drag")
+      
+      The `moveRows` method comes with the `finalIndex` parameter. It tells where to **overlap** the first element from the moved ones. The place you intend to move the element is managed by **visual indexes**.
+      
+      ![move](move_action.svg "Move")
+      
+      Please note that in case of `moveRows` some move actions are limited. For example, if you initiate a move of **more than one element** to the **last position** (visual index = the number of items) the operation will be canceled.
+      The first element in the collection you would like to move will try to reach the last position (`finalIndex`) which is feasible. However, the next ones will attempt to reach the position exceeding the number of all items.
+      
+      You can find The plugin's `isMovePossible` API method useful when you want to determine if the move action is possible. `movePossible` parameter of `beforeRowMove` and `afterRowMove` hooks may be helpful as well.
+      
+      
+      ### Changes in ManualColumnFreeze plugin behavior
+      
+      The `ManualColumnFreeze` plugin itself also works differently. Before the `8.0.0v` frozen columns attempted to go back to original positions upon the unfreeze. Currently, the original position is **not calculated**. It unfreezes the column just after the "line of freeze". The functionality changed because after several actions like `moving` the former position was rather estimated than determined.
+      
+      ### Using minSpareRows option with TrimRows plugin
+      Another breaking change is related to `minSpareRows` and `minRows`. The difference is visible when the data is being trimmed (i.e. by the `TrimRows` plugin) and the options are set. In previous versions the data which was supposed to be trimmed **included** `minSpareRows` and `minRows` which resulted in trimming them along with other rows. In version 8.0.0  **spare rows** are always present and cannot be removed by trimming.
+      
+      Check the following code example:
+      ```javascript
+      var hotInstance = new Handsontable(container, {
+        data: Handsontable.helper.createSpreadsheetData(5, 5),
+        minSpareRows: 2,
+        trimRows: [1, 2, 3, 4]
+      });
+      ```
+      
+      The results before:
+      
+      ![spare_before](spare_before.svg)
+      
+      The results after:
+      
+      ![spare_after](spare_after.svg)
+      
+      To ensure your application works as expected you should review it and search the use cases of `minSpareRows` or `minRows`, if the application relied on this mechanism you may need to adapt it. For example, in prior versions the following code:
+      
+      ```javascript
+      const hotInstance = new Handsontable(container, {
+        data: Handsontable.helper.createSpreadsheetData(10, 10),
+        trimRows: [0],
+        minSpareRows: 2
+      }
+      ```
+      rendered `0` spare rows. If you want to keep it that way you may need a workaround, for instance:
+      
+      ```javascript
+      const hotInstance = new Handsontable(container, {
+        data: Handsontable.helper.createSpreadsheetData(10, 10),
+        trimRows: [0],
+        beforeCreateRow(index, amount, source) {
+          const rowIndexMapper = this.rowIndexMapper;
+          // If any row was skipped then block a creation of row execution.
+          if (source === 'auto' && rowIndexMapper.getNotSkippedIndexesLength() < rowIndexMapper.getNumberOfIndexes()) {
+            return false;
+          }
+        },
+        minSpareRows: 2
+      });
+      ```
+      
+      ### Custom editors
+      
+      Custom editors will now use data attribute to recognize the input as an editor. Before this change, Handsontable depended on the CSS `className`. And it had to be `handsontableInput`. Now it is an attribute - `data-hot-input`. Focusable and editable elements must have this attribute set up to work properly. `ClassNames` were freed from restrictive names.
+      
+      An example with `data-hot-input` in Custom editor, to make it work properly on a focusable element:
+      
+      ```javascript
+      createElements() {
+        ...
+        this.TEXTAREA.className = 'handsontableInput';
+        ...
+      }
+      ```
+      
+      After the changes:
+      ```javascript
+      createElements() {
+        ...
+        this.TEXTAREA.className = 'anythingYouWant';
+        this.TEXTAREA.setAttribute('data-hot-input', true);
+        ...
+      }
+      ```
+      
+      
+      ### Indexes that exceed the data length
+      Also, the methods `toVisualRow`, `toVisualColumn` and `toPhysicalRow`, `toPhysicalColumn` used to return index numbers that exceeded the overall length. For example:
+      
+      ```javascript
+      // Data set with just 10 rows.
+      const physicalRow = hotInstance.toPhysicalRow(20);
+      // physicalRow === 20
+      ```
+      
+      From now on, if you want to refer to them you will receive `null`:
+      ```javascript
+      // Data set with just 10 rows.
+      const physicalRow = hotInstance.toPhysicalRow(20);
+      // physicalRow === null
+      ```
+      
+      It can be a breaking change for your project if any parts of it expected the output to be a `number`, now it will be `null`.
+      In case you still want to use it as before you need to, for example, check for `null`  and fallback to visual row index:
+      
+      ```javascript
+      const visualRow = 20;
+      const physicalRow = hotInstance.toPhysicalRow(visualRow) ?? visualRow;
+      // physicalRow === 20
+      ```
+      
+      ### RecordTranslator in plugins
+      The `RecordTranslator` object was removed, as a consequence, `t` property is no longer available in the plugins. This alias could be used to translate between visual and physical indexes with four methods:
+      `t.toVisualRow`, `t.toPhysicalRow`, `t.toVisualColumn`, `t.toPhysicalColumn`. It is advised to call the following methods directly on the instance: `hotInstance.toVisualRow`, `hotInstance.toPhysicalRow`, `hotInstance.toVisualColumn`, `hotInstance.toPhysicalColumn`. The mappers can be accessed using `hotInstance.rowIndexMapper` and `hotInstance.columnIndexMapper` properties.
+      
+      This example shows how to migrate plugins from using `t` property to calling the method directly on the instance:
+      
+      Before:
+      ```javascript
+      const physicalColumn = this.t.toPhysicalColumn(column);
+      ```
+      
+      After the change:
+      ```javascript
+        const physicalColumn = this.hot.toPhysicalColumn(column);
+      ```
+      
+      ### Selecting data
+      
+      **Left mouse button** click on the corner will select all cells with headers in 8.0.0.
+      
+      It used to select just one cell:
+      
+      ![LMB_was](LMB_was.gif)
+      
+      Now the expected behavior is to select all cells:
+      
+      ![LMB_is](LMB_is.gif)
+      
+      
+      To keep the previous behavior you need to use the following workaround:
+      
+      ```javascript
+      // manipulate the event that happens before the click on cells
+      beforeOnCellMouseDown(event, coords) {
+        // apply only for coordinates that are top left corner outside the grid
+        if (coords.col === -1 && coords.row === -1) {
+          // stop other event listeners of the same event from being called
+          event.stopImmediatePropagation();
+          // use the index mapper method - getVisualFromRenderableIndex on both row and column to choose visual indexes
+          // this will result in selecting the first cell in the corner
+          const visualRow = this.rowIndexMapper.getVisualFromRenderableIndex(0);
+          const visualColumn = this.columnIndexMapper.getVisualFromRenderableIndex(0);
+          this.selectCell(visualRow, visualColumn);
+        }
+      }
+      ```
+      ### Load data hooks arguments order
+      
+      Hook `afterLoadData` has been changed. Its first argument will present a **data source** that was set during the **load data** action. Now, a flag informing whether a load of data was done during initialization is the second argument. Also, a new corresponding hook, `beforeLoadData`, has been introduced, it is called before loading data.
+      
+      Before:
+      ```javascript
+      afterLoadData?: (initialLoad: boolean) => void;
+      ```
+      
+      Now:
+      ```javascript
+      afterLoadData?: (sourceData: object | void, initialLoad: boolean) => void;
+      ```
+      
+      `beforeLoadData` has the same order of arguments:
+      ```javascript
+      beforeLoadData?: (sourceData: object | void, initialLoad: boolean) => void;
+      ```
+      
+      ### Column and row resizing hooks arguments order
+      
+      `after*`  and `before*` hooks related to resizing changed in terms of the order of arguments. Now the first argument is a `newSize` of a row or column and the second argument is `column` or `row`. "Current" prefix was dropped because this hook might not always be called on selection.
+      
+      Here is the comparison:
+      
+      Prior 8.0.0:
+      ```javascript
+      afterColumnResize?: (currentColumn: number, newSize: number, isDoubleClick: boolean) => void;
+      afterRowResize?: (currentRow: number, newSize: number, isDoubleClick: boolean) => void;
+      beforeColumnResize?: (currentColumn: number, newSize: number, isDoubleClick: boolean) => void | number;
+      beforeRowResize?: (currentRow: number, newSize: number, isDoubleClick: boolean) => number | void;
+      ```
+      
+      Now:
+      ```javascript
+      afterColumnResize?: (newSize: number, column: number, isDoubleClick: boolean) => void;
+      afterRowResize?: (newSize: number, row: number, isDoubleClick: boolean) => void;
+      beforeColumnResize?: (newSize: number, column: number, isDoubleClick: boolean) => void | number;
+      beforeRowResize?: (newSize: number, row: number, isDoubleClick: boolean) => number | void;
+      ```
+      
+      ### Removals
+      
+      Hook `skipLengthCache` was removed because `indexMapper` is now responsible for the cache and length.
+      
+      Public methods `colOffset` and `rowOffset` were removed and their functionality is now for internal use only.
+      
+      Also, an **experimental** feature: `ganttChart` plugin was removed and is no longer available.
+      
+      If you use these features in your project and need backward compatibility, please contact the support (at support@handsontable.com) for further information.      
   </div>
   <p>
     <a href="https://github.com/handsontable/docs/edit/<?js= version ?>/tutorials/introduction.html"
