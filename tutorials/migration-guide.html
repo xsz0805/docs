@@ -200,108 +200,132 @@
         </code>
       </pre>
 
-      ### Plugins no longer enable other plugins
-      
-      From version 8.0.0 you can set plugins separately. They no longer rely on each other tightly in terms of functionality, so it is up to the developer to use them simultaneously when needed. You can avoid unwanted "extra" functionality switched on by a supporting plugin.
-      
-      `NestedRows` and `Filters` no longer use `TrimRows`. To preserve the same functionality as before you need to set them explicitly:
-      
-      Before 8.0.0
-      ```javascript
-      nestedRows: true
-      ```
-      ```javascript
-      filters: true
-      ```
-      
-      After:
-      ```javascript
-      nestedRows: true,
-      trimRows: true
-      ```
-      ```javascript
-      filters: true,
-      trimRows: true
-      ```
-      
-      `ManualColumnFreeze` does not rely on `manualColumnMove` plugin. To preserve the same functionality as before you need to set it explicitly:
-      
-      Before 8.0.0
-      ```javascript
-      manualColumnFreeze: true
-      ```
-      
-      After:
-      ```javascript
-      manualColumnFreeze: true,
-      manualRowMove: true
-      ```
-      
-      `ColumnSorting` will not enable `ObserveChanges`. To preserve the same functionality as before you need to set it explicitly:
-      
-      Before 8.0.0
-      ```javascript
-      columnSorting: true
-      ```
-      
-      After:
-      ```javascript
-      columnSorting: true,
-      observeChanges: true
-      ```
-      
-      `CollapsibleColumns` plugin no longer uses `hiddenColumns` hence the plugin will not be enabled. To preserve the same functionality as before you need to set it explicitly:
-      
-      Before 8.0.0
-      ```javascript
-      collapsibleColumns: true
-      ```
-      
-      After:
-      ```javascript
-      collapsibleColumns: true,
-      hiddenColumns: true
-      ```
-      
-      ### Data reference and ObserveChanges plugin
-      
-      Modifying the table’s data by reference and calling `render` is no longer feasible. Now all the data-related operations need to be performed using the API methods such as `populateFromArray` or `setDataAtCell`.
-      
-      There is a way to still modify the data by reference and have it rendered but you need to enable `ObserveChanges` plugin. **It is not recommended though** and you should use core API methods.
-      
-      Instead of setting data directly:
-      ```javascript
-      data[rowIndex][columnIndex] = 'New Cell Value';
-      ```
-      You should use `setSourceDataAtCell`:
-      ```javascript
-      hotInstance.setSourceDataAtCell(rowIndex, columnIndex, 'New Cell Value');
-      ```
-      
-      `modifySourceData` hook was added and its behavior is similar to `modifyData` but it is called each time the **source data** is requested.
-      
-      The source data API was changed as well and it will no longer return a reference to the source data object. Instead, it returns a copy of the data, possibly already modified by the `modifySourceData` and `modifyRowData` hooks. The change applies to all "getter" source methods - `getSourceData`, `getSourceDataAtCell`, `getSourceDataAtRow`, `getSourceDataAtCol` and `getSourceDataArray`.
-      
-      Since it breaks the link to original data source reference, `setSourceDataAtCell` and `afterSetSourceDataAtCell` were introduced to maintain a similar functionality.
-      
-      Before to get source data:
-      
-      ```javascript
-      hotInstance.getSourceData()[0][0] = 'A1';
-      ```
-      
-      Now:
-      
-      ```javascript
-      hotInstance.setSourceDataAtCell(0,0,'A1');
-      ```
-      
-      It is also worth to mention that `getSourceData` will return a clone of the entire dataset, when run without arguments  - `getSourceData()`. However, if a row/column range is provided: `getSourceData(0, 0, 10, 10)`, it will filter the dataset with the `columns` and/or `dataSchema` options, and return only the columns configured to be visible.
-      
-      ### Changes in ManualRowMove plugin behavior
-      
-      There is also a significant change inside `ManualRowMove` plugin. It has been adapted to work with Index Mappers and physical indexes inside array should be mapped to visual indexes. From this version onward, the `target` argument is called `finalIndex`. `beforeRowMove` and `afterRowMove` hooks were added as extra parameters.
-      
+      <h3>Plugins no longer enable other plugins</h3>
+
+      <p>From version 8.0.0 you can set plugins separately. They no longer rely on each other tightly in terms of functionality, so it is up to the developer to use them simultaneously when needed. 
+      You can avoid unwanted "extra" functionality switched on by a supporting plugin.</p>
+
+      <code>NestedRows</code> and <code>Filters</code> no longer use <code>TrimRows</code>. To preserve the same functionality as before you need to set them explicitly:
+
+      <p>Before 8.0.0</p>
+      <pre>
+        <code class="lang-js">
+          nestedRows: true
+        </code>
+      </pre>
+      <pre>
+        <code class="lang-js">
+          filters: true
+        </code>
+      </pre>
+
+      <p>After:</p>
+      <pre>
+        <code class="lang-js">
+          nestedRows: true,
+          trimRows: true
+        </code>
+      </pre>
+      <pre>
+        <code class="lang-js">
+          filters: true,
+          trimRows: true
+        </code>
+      </pre>
+
+      <p><code>ManualColumnFreeze</code> does not rely on <code>manualColumnMove</code> plugin. To preserve the same functionality as before you need to set it explicitly:</p>
+
+      <p>Before 8.0.0</p>
+      <pre>
+        <code class="lang-js">
+          manualColumnFreeze: true
+        </code>
+      </pre>
+
+      <p>After:</p>
+      <pre>
+        <code class="lang-js">
+          manualColumnFreeze: true,
+          manualRowMove: true
+        </code>
+      </pre>
+
+      <p><code>ColumnSorting</code> will not enable <code>ObserveChanges</code>. To preserve the same functionality as before you need to set it explicitly:</p>
+
+      <p>Before 8.0.0</p>
+      <pre>
+        <code class="lang-js">
+          columnSorting: true
+        </code>
+      </pre>
+
+      <p>After:</p>
+      <pre>
+        <code class="lang-js">
+          columnSorting: true,
+          observeChanges: true
+        </code>
+      </pre>
+
+      <p><code>CollapsibleColumns</code> plugin no longer uses <code>hiddenColumns</code> hence the plugin will not be enabled. To preserve the same functionality as before you need to set it explicitly:</p>
+
+      <p>Before 8.0.0</p>
+      <pre>
+        <code class="lang-js">
+          collapsibleColumns: true
+        </code>
+      </pre>
+
+      <p>After:</p>
+      <pre>
+        collapsibleColumns: true,
+        hiddenColumns: true
+        </code>
+      </pre>
+
+      <h3>Data reference and ObserveChanges plugin </h3>
+
+     <p>Modifying the table’s data by reference and calling <code>render</code> is no longer feasible. Now all the data-related operations need to be performed using the API methods such as <code>populateFromArray</code> or <code>setDataAtCell</code>.
+      There is a way to still modify the data by reference and have it rendered but you need to enable <code>ObserveChanges</code> plugin. <strong>It is not recommended though</strong> and you should use core API methods.</p>>
+
+      <p>Instead of setting data directly:</p>
+      <pre>
+        data[rowIndex][columnIndex] = 'New Cell Value';
+        </code>
+      </pre>
+
+      <p>You should use <code>setSourceDataAtCell</code>:</p>
+      <p>Instead of setting data directly:</p>
+      <pre>
+        hotInstance.setSourceDataAtCell(rowIndex, columnIndex, 'New Cell Value');
+        </code>
+      </pre>
+
+      <p><code>modifySourceData</code> hook was added and its behavior is similar to <code>modifyData</code> but it is called each time the <strong>source</strong> data is requested.
+      The source data API was changed as well and it will no longer return a reference to the source data object. Instead, it returns a copy of the data, possibly already modified by the <code>modifySourceData</code> and <code>modifyRowData</code> hooks.
+      The change applies to all "getter" source methods - <code>getSourceData</code>, <code>getSourceDataAtCell</code>, <code>getSourceDataAtRow</code>, <code>getSourceDataAtCol</code> and <code>getSourceDataArray</code>.
+      Since it breaks the link to original data source reference, `setSourceDataAtCell` and `afterSetSourceDataAtCell` were introduced to maintain a similar functionality.</p>
+
+      <p>Before to get source data:</p>
+      <pre>
+        hotInstance.getSourceData()[0][0] = 'A1';
+        </code>
+      </pre>
+
+      <p>Now:</p>
+      <pre>
+        hotInstance.setSourceDataAtCell(0,0,'A1');
+        </code>
+      </pre>
+
+      <p>It is also worth to mention that <code>getSourceData</code> will return a clone of the entire dataset, when run without arguments  - <code>getSourceData()</code>.
+        However, if a row/column range is provided: <code>getSourceData(0, 0, 10, 10)</code>, it will filter the dataset with the <code>columns</code> and/or <code>dataSchema</code> options, and return only the columns configured to be visible.
+
+      <h3>Changes in ManualRowMove plugin behavior</h3>
+
+      <p>There is also a significant change inside <code>ManualRowMove</code> plugin. It has been adapted to work with Index Mappers and physical indexes inside array should be mapped to visual indexes.
+      From this version onward, the <code>target</code> argument is called <code>finalIndex</code>. <code>beforeRowMove</code> and <code>afterRowMove</code> hooks were added as extra parameters.</p>
+
       The `moveRows` method works differently now and a **new `dragRows` method overtook its place in terms of functionality**.
       To put it bluntly, if you want to preserve previous functionality of `moveRows` rename it to the `dragRows`.
       
