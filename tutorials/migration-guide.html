@@ -31,6 +31,7 @@
         <li><code>collapsibleColumns</code></li>
         <li><code>ColumnSorting</code></li>
         <li><code>data binding</code></li>
+        <li><code>dragColumns</code></li>
         <li><code>dragRows </code></li>
         <li><code>Filters</code></li>
         <li><code>finalIndex</code></li>
@@ -81,7 +82,7 @@
 
     <h4><code>modifyRow, unmodifyRow, modifyCol, unmodifyCol</code></h4>
 
-      <code>modify*</code>> and <code>unmodify*</code> hooks for rows and columns were removed. The actions to be taken are similar for both rows and columns.
+      <p>code>modify*</code>> and <code>unmodify*</code> hooks for rows and columns were removed. The actions to be taken are similar for both rows and columns.</p>
 
       <p>Prior 8.0.0 to move a row you could use <code>modifyRow</code>, for example:</p>
     <pre>
@@ -319,7 +320,7 @@
       <p>Now:</p>
       <pre>
         <code class="lang-js">
-        hotInstance.setSourceDataAtCell(0,0,'A1');
+          hotInstance.setSourceDataAtCell(0, 0, 'A1');
         </code>
       </pre>
 
@@ -332,7 +333,7 @@
       From this version onward, the <code>target</code> argument is called <code>finalIndex</code>. <code>beforeRowMove</code> and <code>afterRowMove</code> hooks were added as extra parameters.</p>
 
       <p>The <code>moveRows</code> method works differently now and a new <code>dragRows</code> method overtook its place in terms of functionality**.
-      To put it bluntly, if you want to preserve previous functionality of <code>moveRows</code> rename it to the <code>dragRows</code>.</p>
+      To put it bluntly, if you want to preserve previous functionality of <code>moveRows</code> rename it to the <code>dragRows</code>. Same goes for <code>dragColumns</code>></p>
 
       <p><strong>Important note!</strong> If <code>NestedRows</code> is set to <code>enabled</code> the move is possible only by the drag in the UI or <code>dragRow</code>/<code>dragRows</code> methods of the <code>ManualRowMove</code> plugin.</p>
 
@@ -466,6 +467,55 @@
           // physicalRow === 20
         </code>
       </pre>
+
+    <p> Simiralily, <code>colToProp</code> and <code>propToCol</code> will also return <code>null</code> in such situation, compare the previous behavior:</p>
+
+    <pre>
+      <code class="lang-js">
+        // Data set with just 10 columns.
+        const physicalColumnIndex = hotInstance.propToCol(20);
+        // physicalColumnIndex === 20
+      </code>
+    </pre>
+    <pre>
+      <code class="lang-js">
+        // Data set with just 10 columns.
+        const physicalColumnIndex = hotInstance.colToProp(20);
+        // physicalColumnIndex === 20
+      </code>
+    </pre>
+
+    <p>ith behavior in 8.0.0:</p>
+    <pre>
+      <code class="lang-js">
+        // Data set with just 10 columns.
+        const physicalColumnIndex = hotInstance.propToCol(20);
+        // physicalColumnIndex === null
+      </code>
+    </pre>
+    <pre>
+      <code class="lang-js">
+        // Data set with just 10 columns.
+        const physicalColumnIndex = hotInstance.colToProp(20);
+        // physicalColumnIndex === null
+      </code>
+    </pre>
+
+    <p>If you relied on these values now you need to check if it's <code>null</code></p>
+    <pre>
+      <code class="lang-js">
+        const visualRow = 20;
+        const physicalRow = hotInstance.propToCol(visualRow) ?? visualRow;
+        // physicalRow === 20
+      </code>
+    </pre>
+    <pre>
+      <code class="lang-js">
+        const visualRow = 20;
+        const physicalRow = hotInstance.colToProp(visualRow) ?? visualRow;
+        // physicalRow === 20
+      </code>
+    </pre>
 
       <h3> RecordTranslator in plugins </h3>
 
