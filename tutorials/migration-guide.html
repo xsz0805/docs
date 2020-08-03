@@ -2,154 +2,130 @@
   <div class="example-container clearfix">
       <h3>Migrating from 7 to 8</h3>
       <p>
-        The purpose of this guide is to make it easier for you to update Handsontable to the 8.0.0 version.
-        We strongly recommend doing so to benefit from the improvements brought by the introduction
-        of the completely new architecture for row and column management.
+        The purpose of the following guide is to facilitate a smoother update to the 8.0.0 version of Handsontable.
+        We strongly recommend an upgrade to make use of all beneficial changes and fixes brought by the introduction of the completely new architecture for row and column management.
       </p>
       <h3>Context</h3>
       <p>
-        In previous versions of Handsontable, the relation between physical and visual indexes was based on callbacks between plugins.
-        However, over the years we have added more and more features to Handsontable, which eventually caused a growing number of issues and imperfections in index translations.
-        To fix that we decided to rewrite part of the index mapping system and adapted plugins to use it.
-        This version introduces a new index mapper that stores, manages, and registers the indexes globally. Under the hood, it is indirectly responsible for managing both rows and columns and acts as a single source of truth. This single modification required us to make some backward-incompatible changes, which are outlined further in this document.
+        In prior versions of the Handsontable component, the calculation between physical and visual indexes was
+        based on callbacks between hooks. With time, when the component got more feature, it slowly led to
+        inconsistencies and the calculation was imperfect in some cases due to growing complexity. To fix that
+        there was a major change in the whole system of mapping the indexes. This version introduces index mapper that
+        stores, manages, and registers the indexes globally. Under the hood, it is indirectly responsible for managing
+        both rows and columns, as a single source of truth to refer to. This modification is a major rewrite of the core
+        feature and may result in breaking changes in your application.
       </p>
       <h3>General guidelines</h3>
       <ul>
-          <li>Check if you use any of the features listed in the <strong>Keywords</strong> section, you need to address them first after the installation.</li>
+          <li>Check if you use any of the features listed in the <strong>Keywords</strong> section, you need to address them first after the <strong>installation</strong>.</li>
           <li>Be sure to test the proposed solutions for keeping backward compatibility, if you experience any problems do not hesitate to reach out to us.</li>
           <li>You can also check the release notes for a complete list of all changes.</li>
       </ul>
       <h3>Keywords (alphabetically)</h3>
       <ul>
-        <li><code>addCondition </code></li>
         <li><code>afterFilter</code></li>
         <li><code>afterLoadData</code></li>
         <li><code>afterRowMove</code></li>
         <li><code>afterUnmergeCells</code></li>
         <li><code>batch</code></li>
         <li><code>beforeRowMove</code></li>
-        <li><code>collapsibleColumns</code></li>
-        <li><code>ColumnSorting</code></li>
+        <li><code>CollapsibleColumns</code></li>
         <li><code>data binding</code></li>
         <li><code>dragColumns</code></li>
-        <li><code>dragRows </code></li>
+        <li><code>dragRows</code></li>
         <li><code>Filters</code></li>
         <li><code>finalIndex</code></li>
-        <li><code>ganttChart</code></li>
-        <li><code>hiddenColumns</code></li>
+        <li><code>GanttChart ColumnSorting</code></li>
+        <li><code>HiddenColumns</code></li>
         <li><code>insert</code></li>
-        <li><code>isMovePossible </code></li>
+        <li><code>isMovePossible</code></li>
         <li><code>ManualColumnFreeze</code></li>
-        <li><code>manualColumnMove</code></li>
+        <li><code>ManualColumnMove</code></li>
         <li><code>ManualRowMove</code></li>
-        <li><code>minRows </code></li>
-        <li><code>minSpareRows </code></li>
+        <li><code>minRows</code></li>
+        <li><code>minSpareRows</code></li>
+        <li><code>modifyCol</code></li>
         <li><code>modifyRow</code></li>
-        <li><code>modifyCol </code></li>
+        <li><code>moveColumns</code></li>
         <li><code>moveRows</code></li>
-        <li><code>NestedRows </code></li>
+        <li><code>NestedRows</code></li>
         <li><code>ObserveChanges</code></li>
-        <li><code>populateFromArray </code></li>
+        <li><code>populateFromArray</code></li>
         <li><code>RecordTranslator</code></li>
-        <li><code>removeConditions</code></li>
         <li><code>setDataAtCell</code></li>
         <li><code>skipLengthCache</code></li>
-        <li><code>toPhysicalColumn </code></li>
-        <li><code>toPhysicalRow </code></li>
+        <li><code>toPhysicalColumn</code></li>
+        <li><code>toPhysicalRow</code></li>
+        <li><code>toVisualColumn</code></li>
         <li><code>toVisualRow</code></li>
-        <li><code>toVisualColumn </code></li>
         <li><code>TrimRows</code></li>
         <li><code>unmodifyCol</code></li>
         <li><code>unmodifyRow</code></li>
       </ul>
     <h3>Installation</h3>
-    <p>Use this command to update the Handsontable to 8th version:
-      <code>npm install handsontable@8</code>
-    </p>
+    <p>Use the following command to update the <strong>Handsontable</strong> to 8th version:</p>
+    <p><code>npm install handsontable@8</code></p>
+
     <h4>Using with wrappers</h4>
-      <p>If you use a wrapper you need to update it as well.</p>
-      <p>For the Handsontable with <strong>React</strong> run:</p>
+      <p>When you use the wrapper you need to update it as well. Run the following command, respectively:</p>
+      <p>If you use <strong>Handsontable</strong> with React:</p>
       <p><code>npm install handsontable@8 @handsontable/react@4</code></p>
-      <p>For the Handsontable with <strong>Vue</strong> run:</p>
+
+      <p>If you use <strong>Handsontable</strong> with Vue</p>
       <code>npm install handsontable @handsontable/vue@5</code>
 
-      <p>For the Handsontable with <strong>Angular</strong> run:</p>
+      <p>If you use <strong>Handsontable</strong> with Angular</p>
       <p><code>npm install handsontable@8 @handsontable/angular@6</code></p>
+
     <h3>Breaking changes of 8.0.0</h3>
     <h3>Removals of hooks</h3>
-    <p>Hooks related to the visual and physical indexes were removed since new architecture for indexes management was introduced.
-      To achieve the same functionality we suggest using the API. The following examples show how to preserve previous functionality.</p>
+    <p>Hooks related to the visual and physical indexes were removed since new architecture for indexes management was
+      introduced. To achieve the same functionality we suggest using the API. What is more, internal calls in the
+      component's code to these hooks were removed and replaced with corresponding API methods. The following examples
+      show how to preserve previous functionality.</p>
 
-    <h4><code>modifyRow, unmodifyRow, modifyCol, unmodifyCol</code></h4>
+    <h4>
+      <code>modifyRow, unmodifyRow, modifyCol, unmodifyCol</code>
+    </h4>
 
-      <p>code>modify*</code>> and <code>unmodify*</code> hooks for rows and columns were removed. The actions to be taken are similar for both rows and columns.</p>
+    <p>
+      <code>modify*</code> and <code>unmodify*</code> hooks for rows and columns were removed. The actions to be
+      taken are similar for both rows and columns.</p>
 
-      <p>Prior 8.0.0 to move a row you could use <code>modifyRow</code>, for example:</p>
-    <pre>
-      <code class="lang-js">
-        modifyRow(row) {
-          if (row === 0) {
-            return 1;
-          }
-          if (row === 1) {
-            return 0;
-          }
-        }
-      </code>
-    </pre>
-      <p>In 8.0.0 it is no longer the case. To achieve the same functionality you need to use <code>rowIndexMapper</code></p>:
+    <p>For example, we will cover <code>modifyRow</code> hook. Prior 8.0.0 to move a row you had to use it</p>
+    <pre><code class="lang-js">modifyRow(row) {
+  if (row === 0) {
+    return 1;
+  }
+
+  if (row === 1) {
+    return 0;
+  }
+}</code></pre>
+      <p>In 8.0.0 it is no longer the case. To achieve the same functionality you need to use <code>rowIndexMapper</code></p>
       <pre>
-        <code class="lang-js">
-          hotInstance.rowIndexMapper.moveIndexes([1, 0], 0);
-          hotInstance.render()
-        </code>
-    </pre>
+        <code class="lang-js">hotInstance.rowIndexMapper.moveIndexes([1, 0], 0);
+hotInstance.render()</code></pre>
       <p>Take look on the trimming example, too. It used to work like this:</p>
-      <pre>
-        <code class="lang-js">
-          data: Handsontable.helper.createSpreadsheetData(10, 10),
-          modifyRow(row) {
-            if (row < 9) {
-              return row + 1;
-            }
-            return null;
-          }
-        </code>
-    </pre>
+      <pre><code class="lang-js">data: Handsontable.helper.createSpreadsheetData(10, 10),
+modifyRow(row) {
+  if (row < 9) {
+    return row + 1;
+  }
+
+  return null;
+}</code></pre>
 
       <p>Now, if you want to get the same results you need to use the <code>TrimmingMap</code>:</p>
-      <pre>
-        <code class="lang-js">
-          import { TrimmingMap } from "handsontable/es/translations";
-          ...
-          const customTrimmingMap = new TrimmingMap();
-          hotInstance.rowIndexMapper.registerMap('customTrimmingMap', customTrimmingMap);
-          customTrimmingMap.setValueAtIndex(0, true); // trimming index 0
-          hotInstance.render();
-        </code>
-      </pre>
+      <pre><code class="lang-js">import { TrimmingMap } from "handsontable/es/translations";
+...
 
-      <p>Prior 8.0.0 to move a column you could use <code>modifyCol</code>, for example:</p>
-      <pre>
-        <code class="lang-js">
-          modifyCol(column) {
-            if (column === 0) {
-              return 1;
-            }
-            if (column === 1) {
-              return 0;
-            }
-          }
-        </code>
-      </pre>
+const customTrimmingMap = new TrimmingMap();
 
-      <p>Now, similarily to moving rows, you have to use corresponding index mapper - <code>columnIndexMapper</code>:</p>
-      <pre>
-        <code class="lang-js">
-          hotInstance.columnIndexMapper.moveIndexes([1, 0], 0);
-          hotInstance.render();
-        </code>
-      </pre>
+hotInstance.rowIndexMapper.registerMap('customTrimmingMap', customTrimmingMap);
+customTrimmingMap.setValueAtIndex(0, true); // trimming index 0
+hotInstance.render();
+</code></pre>
 
       <h4><code>hiddenRow, hiddenColumn</code></h4>
 
@@ -157,133 +133,86 @@
 
       <p>Prior 8.0.0:</p>
       <pre>
-        <code class="lang-js">
-          hot.hasHook('hiddenColumn') && hot.runHooks('hiddenColumn', visualColumn);
-        </code>
+        <code class="lang-js">hot.hasHook('hiddenColumn') && hot.runHooks('hiddenColumn', visualColumn);</code>
       </pre>
 
       <p>Now:</p>
       <pre>
-        <code class="lang-js">
-          hot.columnIndexMapper.isHidden(hot.toPhysicalColumn(visualColumn));
-        </code>
+        <code class="lang-js">hot.columnIndexMapper.isHidden(hot.toPhysicalColumn(visualColumn));</code>
       </pre>
 
       <p>An example for rows:</p>
 
       <p>Prior 8.0.0:</p>
       <pre>
-        <code class="lang-js">
-          hot.hasHook('hiddenRow') && hot.runHooks('hiddenRow', visualRow);
-        </code>
+        <code class="lang-js">hot.hasHook('hiddenRow') && hot.runHooks('hiddenRow', visualRow);</code>
       </pre>
 
       <p>Now</p>
       <pre>
-        <code class="lang-js">
-          hot.rowIndexMapper.isHidden(hot.toPhysicalRow(visualRow));
-        </code>
+        <code class="lang-js">hot.rowIndexMapper.isHidden(hot.toPhysicalRow(visualRow));</code>
       </pre>
 
       <h3>Removing redundant <code>render()</code> from <code>after*</code> hooks</h3>
 
-      <p>The sequence of <code>after...</code> hooks changed, for example: <code>afterLoadData</code>, <code>afterFilter</code>, <code>afterUnmergeCells</code> are now called <strong>before the render</strong>>.
+      <p>The sequence of <code>after...</code> hooks changed, for example: <code>afterLoadData</code>, <code>afterFilter</code>, <code>afterUnmergeCells</code> are now called <strong>before the render</strong>.
         In the previous versions, you had to call <code>render</code> to apply changes made with <code>after...</code> hooks. In some cases, depending on the number of hooks
         registered, it led to rendering all the cells multiple times. Many of these operations were redundant and unnecessary, resulting only in a performance bottleneck.
       </p>
 
-      <p>From now on, you can alter the `Handsontable` instance in each hook and it will re-render only once. To benefit from this change you have to review all your hooks and remove unnecessary render calls. Example:</p>
+      <p>From now on, you can alter the <code>Handsontable</code> instance in each hook and it will re-render only once. To benefit from this change you have to review all your hooks and remove unnecessary render calls. Example:</p>
       <pre>
-        <code class="lang-js">
-          instance.addHook('afterFilter', function () {
-            // ... your operations
-            instance.render(); // <= remove this line!
-        </code>
-      </pre>
+        <code class="lang-js">instance.addHook('afterFilter', function () {
+  // ... your operations
+  instance.render(); // <= remove this line!</code></pre>
 
       <h3>Plugins no longer enable other plugins</h3>
 
-      <p>From version 8.0.0 you can set plugins separately. They no longer rely on each other tightly in terms of functionality, so it is up to the developer to use them simultaneously when needed. 
+      <p>From version 8.0.0 you can set plugins separately. They no longer rely on each other tightly in terms of functionality, so it is up to the developer to use them simultaneously when needed.
       You can avoid unwanted "extra" functionality switched on by a supporting plugin.</p>
 
-      <code>NestedRows</code> and <code>Filters</code> no longer use <code>TrimRows</code>. To preserve the same functionality as before you need to set them explicitly:
+      <code>NestedRows</code> and <code>Filters</code> no longer depend on nor enable <code>TrimRows</code> plugin.
+      To keep using the <code>TrimRows</code> functionality, mostly use API or if your custom plugin is based on it,
+      you need to enable the plugin explicitly:
 
       <p>Before 8.0.0</p>
-      <pre>
-        <code class="lang-js">
-          nestedRows: true
-        </code>
-      </pre>
-      <pre>
-        <code class="lang-js">
-          filters: true
-        </code>
-      </pre>
+      <pre><code class="lang-js">nestedRows: true</code></pre>
+      <pre><code class="lang-js">filters: true</code></pre>
 
       <p>After:</p>
-      <pre>
-        <code class="lang-js">
-          nestedRows: true,
-          trimRows: true
-        </code>
-      </pre>
-      <pre>
-        <code class="lang-js">
-          filters: true,
-          trimRows: true
-        </code>
-      </pre>
-
+      <pre><code class="lang-js">nestedRows: true,
+trimRows: true</code></pre>
+      <pre><code class="lang-js">filters: true,
+trimRows: true</code></pre>
       <p><code>ManualColumnFreeze</code> does not rely on <code>manualColumnMove</code> plugin. To preserve the same functionality as before you need to set it explicitly:</p>
 
       <p>Before 8.0.0</p>
-      <pre>
-        <code class="lang-js">
-          manualColumnFreeze: true
-        </code>
-      </pre>
+      <pre><code class="lang-js">manualColumnFreeze: true</code></pre>
 
       <p>After:</p>
       <pre>
-        <code class="lang-js">
-          manualColumnFreeze: true,
-          manualRowMove: true
-        </code>
-      </pre>
+        <code class="lang-js">manualColumnFreeze: true,
+manualRowMove: true</code></pre>
 
       <p><code>ColumnSorting</code> will not enable <code>ObserveChanges</code>. To preserve the same functionality as before you need to set it explicitly:</p>
 
       <p>Before 8.0.0</p>
-      <pre>
-        <code class="lang-js">
-          columnSorting: true
-        </code>
-      </pre>
+      <pre><code class="lang-js">columnSorting: true</code></pre>
 
       <p>After:</p>
-      <pre>
-        <code class="lang-js">
-          columnSorting: true,
-          observeChanges: true
-        </code>
-      </pre>
+      <pre><code class="lang-js">columnSorting: true,
+observeChanges: true</code></pre>
 
       <p><code>CollapsibleColumns</code> plugin no longer uses <code>hiddenColumns</code> hence the plugin will not be enabled. To preserve the same functionality as before you need to set it explicitly:</p>
 
       <p>Before 8.0.0</p>
       <pre>
-        <code class="lang-js">
-          collapsibleColumns: true
-        </code>
+        <code class="lang-js">collapsibleColumns: true</code>
       </pre>
 
       <p>After:</p>
-      <pre>
-        <code class="lang-js">
-        collapsibleColumns: true,
-        hiddenColumns: true
-        </code>
-      </pre>
+      <pre><code class="lang-js">collapsibleColumns: true,
+hiddenColumns: true</code></pre>
 
       <h3>Data reference and ObserveChanges plugin </h3>
 
@@ -291,19 +220,11 @@
       There is a way to still modify the data by reference and have it rendered but you need to enable <code>ObserveChanges</code> plugin. <strong>It is not recommended though</strong> and you should use core API methods.</p>
 
       <p>Instead of setting data directly:</p>
-      <pre>
-        <code class="lang-js">
-        data[rowIndex][columnIndex] = 'New Cell Value';
-        </code>
-      </pre>
+      <pre><code class="lang-js">data[rowIndex][columnIndex] = 'New Cell Value';</code></pre>
 
       <p>You should use <code>setSourceDataAtCell</code>:</p>
       <p>Instead of setting data directly:</p>
-      <pre>
-        <code>
-        hotInstance.setSourceDataAtCell(rowIndex, columnIndex, 'New Cell Value');
-        </code>
-      </pre>
+      <pre><code>hotInstance.setSourceDataAtCell(rowIndex, columnIndex, 'New Cell Value');</code></pre>
 
       <p><code>modifySourceData</code> hook was added and its behavior is similar to <code>modifyData</code> but it is called each time the <strong>source</strong> data is requested.
       The source data API was changed as well and it will no longer return a reference to the source data object. Instead, it returns a copy of the data, possibly already modified by the <code>modifySourceData</code> and <code>modifyRowData</code> hooks.
@@ -311,18 +232,10 @@
       Since it breaks the link to original data source reference, <code>setSourceDataAtCell</code> and <code>afterSetSourceDataAtCell</code> were introduced to maintain a similar functionality.</p>
 
       <p>Before to get source data:</p>
-      <pre>
-        <code class="lang-js">
-        hotInstance.getSourceData()[0][0] = 'A1';
-        </code>
-      </pre>
+      <pre><code class="lang-js">hotInstance.getSourceData()[0][0] = 'A1';</code></pre>
 
       <p>Now:</p>
-      <pre>
-        <code class="lang-js">
-          hotInstance.setSourceDataAtCell(0, 0, 'A1');
-        </code>
-      </pre>
+      <pre><code class="lang-js">hotInstance.setSourceDataAtCell(0, 0, 'A1');</code></pre>
 
       <p>It is also worth to mention that <code>getSourceData</code> will return a clone of the entire dataset, when run without arguments  - <code>getSourceData()</code>.
         However, if a row/column range is provided: <code>getSourceData(0, 0, 10, 10)</code>, it will filter the dataset with the <code>columns</code> and/or <code>dataSchema</code> options, and return only the columns configured to be visible.
