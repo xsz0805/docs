@@ -13,8 +13,14 @@
 
     <h3 id="overview">Overview</h3>
     <p>
-      The <i>Hidden Rows</i> plugin allows hiding specific rows from the table. (Note, that these rows are still being rendered - the plugin
-      just hides them using CSS).
+      The <i>Hidden Rows</i> plugin allows hiding specific rows from the table. Rows being hidden <strong>are included</strong>
+      in a <code>DataMap</code> (gets by the <a href="/docs/<?js= version ?>/Core.html#getData">getData</a>
+      method), but they <strong>aren't rendered</strong>.
+    </p>
+
+    <p>
+      <strong>Note:</strong> If you need to exclude some rows from both rendering and a <code>DataMap</code>
+      use the <a href="/docs/<?js= version ?>/demo-trimming-rows.html">TrimRows</a> plugin.
     </p>
 
     <h3 id="setup">Quick setup</h3>
@@ -38,7 +44,7 @@
     </p>
     <p>
       You can show/hide certain rows straight from the <a href="/docs/<?js= version ?>/demo-context-menu.html">Context menu</a> using the following keys:
-      <code>hidden_rows_show</code> and <code>hidden_rows_hide</code>. A current bottleneck is that this plugin doesn't work properly with column sorting and filters.
+      <code>hidden_rows_show</code> and <code>hidden_rows_hide</code>.
       <br><br> See <a href="#examples">the examples section</a> for more details.
     </p>
 
@@ -86,14 +92,14 @@
     </p>
     <pre><code class="js">plugin.hideRow(4);</code></pre>
     <p>
-      To trim multiple rows, you can either pass them as arguments to the <code>hideRow</code> method, or pass an array of indexes
+      To hide multiple rows, you can either pass them as arguments to the <code>hideRow</code> method, or pass an array of indexes
       to the <code>hideRows</code> method:
     </p>
     <pre><code class="js">plugin.hideRow(0, 4, 6);
 // or
 plugin.hideRows([0, 4, 6]);</code></pre>
 
-    <p>To restore the trimmed row(s), use the following methods:</p>
+    <p>To restore the hidden row(s), use the following methods:</p>
     <pre><code class="js">plugin.showRow(4);</code></pre><br>
     <pre><code class="js">plugin.showRow(0, 4, 6);</code></pre><br>
     <pre><code class="js">plugin.showRows([0, 4, 6]);</code></pre>

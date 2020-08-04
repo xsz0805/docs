@@ -13,13 +13,13 @@
     <h3 id="page-options">Introduction to cell options</h3>
     <p>Any constructor or column option may be overwritten for a particular cell (row/column combination),
       using <code>cell</code> array passed to the Handsontable constructor. Example:</p>
-    <pre><code>var hot = new Handsontable(document.getElementById('example'), {
+    <pre><code class="lang-javascript">var hot = new Handsontable(document.getElementById('example'), {
   cell: [
     {row: 0, col: 0, readOnly: true}
   ]
 });</code></pre>
     <p>Or using cells function property to the Handsontable constructor. Example:</p>
-    <pre><code>var hot = new Handsontable(document.getElementById('example'), {
+    <pre><code class="lang-javascript">var hot = new Handsontable(document.getElementById('example'), {
   cells: function (row, col, prop) {
     var cellProperties = {}
 
@@ -37,7 +37,7 @@
     <p>Since Handsontable 0.9 we use Cascading Configuration, which is a fast way to provide configuration options
       for the whole table, along with its columns and particular cells.</p>
     <p>Consider the following example:</p>
-    <pre><code>var hot = new Handsontable(document.getElementById('example'), {
+    <pre><code class="lang-javascript">var hot = new Handsontable(document.getElementById('example'), {
   readOnly: true,
   columns: [
     {readOnly: false},

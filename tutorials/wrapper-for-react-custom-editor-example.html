@@ -48,7 +48,7 @@
 
             this.TEXTAREA = document.createElement('input');
             this.TEXTAREA.setAttribute('placeholder', 'Custom placeholder');
-            this.TEXTAREA.className = 'handsontableInput';
+            this.TEXTAREA.setAttribute('data-hot-input', true);
             this.textareaStyle = this.TEXTAREA.style;
             Handsontable.dom.empty(this.TEXTAREA_PARENT);
             this.TEXTAREA_PARENT.appendChild(this.TEXTAREA);

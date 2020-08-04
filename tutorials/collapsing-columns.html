@@ -14,10 +14,18 @@
       The <i>Collapsible Columns</i> plugin enables collapsing columns, covered by a header with the <code>colspan</code>
       property defined.<br/>
       The plugin adds a "expand/collapse" button multi-column headers (created with the Nested Headers plugin).
-      Clicking these buttons will collapse (or expands) all "child" headers, leaving the first one visible.<br/>
-      <br/>
-      <strong>Node:</strong> You'll need to enable the <a href="/docs/<?js= version ?>/demo-nested-headers.html">Nested Headers</a> and
-      <a href="/docs/<?js= version ?>/demo-hiding-columns.html">Hidden Columns</a> plugins in order for this plugin to work properly.
+      Clicking these buttons will collapse (or expands) all "child" headers, leaving the first one visible.
+    </p>
+
+    <p>
+      <strong>Node:</strong> You'll need to enable the <a href="/docs/<?js= version ?>/demo-nested-headers.html">Nested Headers</a>
+      plugin in order for this plugin to work properly.
+    </p>
+
+    <p>
+      <strong>Note:</strong> Please keep in mind that collapsed rows <strong>are included</strong>
+      in a <code>DataMap</code> (gets by the <a href="/docs/<?js= version ?>/Core.html#getData">getData</a>
+      method), but they <strong>aren't rendered</strong>.
     </p>
 
     <h3 id="setup">Setup and configuration</h3>
@@ -61,7 +69,6 @@
           data: Handsontable.helper.createSpreadsheetData(5,10),
           colHeaders: true,
           rowHeaders: true,
-          hiddenColumns: true,
           colWidths: 60,
           nestedHeaders: [
             ['A', {label: 'B', colspan: 8}, 'C'],

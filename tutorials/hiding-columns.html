@@ -13,8 +13,9 @@
 
     <h3 id="overview">Overview</h3>
     <p>
-      The <i>Hidden Columns</i> plugin allows hiding specific columns from the table. (Note, that these columns are still being rendered - the plugin
-      just hides them using CSS).
+      The <i>Hidden Columns</i> plugin allows hiding specific columns from the table. Columns being hidden <strong>are
+      included</strong> in a <code>DataMap</code> (gets by the <a href="/docs/<?js= version ?>/Core.html#getData">getData</a>
+      method), but they <strong>aren't rendered</strong>.
     </p>
 
     <h3 id="setup">Quick setup</h3>
@@ -84,14 +85,14 @@
     </p>
     <pre><code class="js">plugin.hideColumn(4);</code></pre>
     <p>
-      To trim multiple columns, you can either pass them as arguments to the <code>hideColumn</code> method, or pass an array of indexes
+      To hide multiple columns, you can either pass them as arguments to the <code>hideColumn</code> method, or pass an array of indexes
       to the <code>hideColumns</code> method:
     </p>
     <pre><code class="js">plugin.hideColumn(0, 4, 6);
 // or
 plugin.hideColumns([0, 4, 6]);</code></pre>
 
-    <p>To restore the trimmed column(s), use the following methods:</p>
+    <p>To restore the hidden column(s), use the following methods:</p>
     <pre><code class="js">plugin.showColumn(4);</code></pre><br>
     <pre><code class="js">plugin.showColumn(0, 4, 6);</code></pre><br>
     <pre><code class="js">plugin.showColumns([0, 4, 6]);</code></pre>
