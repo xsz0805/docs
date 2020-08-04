@@ -81,6 +81,9 @@
           },
           "release-notes": {
             "title": "Release notes"
+          },
+          "migration-guide": {
+            "title": "Migration guide"
           }
         }
       },

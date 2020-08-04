@@ -23,7 +23,7 @@ exports.setupGitApi = function setupGitApi(githubToken) {
   });
 
   github.authenticate({
-    type: 'oauth',
+    type: 'token',
     token: githubToken
   });
 };
