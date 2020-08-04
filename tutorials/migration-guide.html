@@ -85,7 +85,7 @@
       show how to preserve previous functionality.</p>
 
     <h4>
-      <code>modifyRow, unmodifyRow, modifyCol, unmodifyCol</code>
+        <code>modifyRow</code>, <code>unmodifyRow</code>, <code>modifyCol</code>, <code>unmodifyCol</code>
     </h4>
 
     <p>
@@ -178,11 +178,13 @@ hotInstance.render();
 
       <p>Before 8.0.0</p>
       <pre><code class="lang-js">nestedRows: true</code></pre>
+      <br/>
       <pre><code class="lang-js">filters: true</code></pre>
 
       <p>After:</p>
       <pre><code class="lang-js">nestedRows: true,
 trimRows: true</code></pre>
+      <br/>
       <pre><code class="lang-js">filters: true,
 trimRows: true</code></pre>
       <p><code>ManualColumnFreeze</code> does not rely on <code>manualColumnMove</code> plugin. To preserve the same functionality as before you need to set it explicitly:</p>
@@ -291,7 +293,7 @@ hiddenColumns: true</code></pre>
 
       <p>
           Please note that in case of "move" methods some move actions are limited. For example, if you initiate a move
-          of <strong>more than one element</strong> to the <strong>last position</strong> (visual index = the number of items)
+          of <strong>more than one element</strong> to the <strong>last position</strong> (visual index = the number of items - 1)
           the operation will be canceled. The first element in the collection you would like to move will try to reach
           the last position (<code>finalIndex</code>) which is feasible. However, the next ones will attempt to reach
           the position exceeding the number of all items.
