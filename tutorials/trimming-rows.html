@@ -13,7 +13,14 @@
 
         <h3 id="overview">Overview</h3>
         <p>
-            The <i>Trim Rows</i> plugin allows excluding selected rows from rendering.
+            The <i>Trim Rows</i> plugin allows trimming specific rows from the table. Rows being trimmed
+            <strong>aren't</strong> included in a <code>DataMap</code> (gets by the
+            <a href="/docs/<?js= version ?>/Core.html#getData">getData</a> method) and <strong>aren't</strong> rendered.
+        </p>
+
+        <p>
+            <strong>Note:</strong> If you need exclude some rows from rendering, but keep them in a <code>DataMap</code>
+           see how the <a href="/docs/<?js= version ?>/demo-hiding-rows.html">HiddenRows</a> plugin works.
         </p>
 
         <h3 id="setup">Setup</h3>
