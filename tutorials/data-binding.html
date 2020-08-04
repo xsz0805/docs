@@ -10,8 +10,18 @@
     <div class="example-container clearfix" name="reference">
       <h3 id="page-reference">Understand binding as a reference</h3>
       <p>
-        Handsontable binds to your data source (list of arrays or list of objects) by reference. Therefore, all the data
-        entered in the grid will alter the original data source. If you have to avoid that, <a href="#page-copy">copy the data</a>
+        Handsontable binds to your data source (list of arrays or list of objects) by reference (not by values,
+        we don't copy input dataset; we rely on the way how JavaScript handle objects). Therefore, all the data
+        entered in the grid will alter the original data source.
+
+        <p>
+          <strong>Note:</strong> You should know the fact that Handsontable initialize source data for the table using
+          a reference, but you shouldn't rely on it. For example, you shouldn't change values in source data using
+          the reference to input dataset. Some mechanisms for handling data aren't prepared for changes from the outside,
+          done in this way.
+        </p>
+
+        If you have to avoid that, <a href="#page-copy">copy the data</a>
         before you pass it to the grid. To change the data from outside Handsontable you can use our API methods, f.e. a
         change being made will be displayed immediately on the screen after calling <a href="/docs/<?js= version ?>/Core.html#setDataAtCell">setDataAtCell</a> method.
       </p>
