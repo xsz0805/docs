@@ -147,11 +147,6 @@
         var state = this.checked;
 
         $('#hooksList input[type=checkbox]').each(function () {
-          if (state === true) {
-            if (this.id === 'check_modifyRow') {
-              return; //too much noise in the log
-            }
-          }
           this.checked = state;
         });
       });
@@ -205,7 +200,7 @@
       <ul>
         <li><a href="/docs/<?js= version ?>/Hooks.html#event:afterChange">afterChange</a></li>
         <li><a href="/docs/<?js= version ?>/Hooks.html#event:afterCreateCol">afterCreateCol</a></li>
-        <li><a href="/docs/<?js= version ?>/Hooks.html#event:afterCreateRow">afterCreateRow<</a></li>
+        <li><a href="/docs/<?js= version ?>/Hooks.html#event:afterCreateRow">afterCreateRow</a></li>
         <li><a href="/docs/<?js= version ?>/Hooks.html#event:afterSetDataAtCell">afterSetDataAtCell</a></li>
         <li><a href="/docs/<?js= version ?>/Hooks.html#event:afterSetDataAtRowProp">afterSetDataAtRowProp</a></li>
         <li><a href="/docs/<?js= version ?>/Hooks.html#event:afterValidate">afterValidate</a></li>
