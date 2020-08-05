@@ -1,6 +1,305 @@
 <div class="static-content">
 
   <div class="example-container clearfix">
+    <h3>8.0.0</h3>
+    <p>Released on 5th of August, 2020</p>
+    <strong>Major changes</strong>
+    <p>
+      This version introduces a completely new architecture for row and column management - index mapper, which is responsible for the storage and management of index values.
+      In prior versions, the calculation between physical and visual indexes was based on callbacks between hooks. That solution slowly led to inconsistencies and the
+      calculation was imperfect in some cases. To fix that there was a major change in the whole system of mapping the indexes. The current solution offers an easier
+      and more straightforward way to perform CRUD and move operations on rows and columns. It keeps all data in one place so getting and managing information is easier and less prone to bugs.
+    </p>
+    <p>
+      The existing features were adapted to benefit from the new architecture. Apart from that, extra methods and hooks were added and there are few depreciations and removals, too.
+    </p>
+    <strong>Breaking changes</strong>
+    <ul>
+      <li>Modifying the table's data by reference and calling <code>render()</code> will not work properly anymore. From this point onward, all the data-related operations need to be performed using the API methods, such as <code>populateFromArray</code> or <code>setDataAtCell</code>.</li>
+      <li>The <code>modifyRow</code>, <code>modifyCol</code>, <code>unmodifyRow</code>, <code>unmodifyCol</code> hooks are no longer needed and were removed. Their
+       functionality can be achived by using API. <a href="https://handsontable.com/docs/8.0.0/tutorial-migration-guide.html" target="_blank">More information in the 8.0.0 migration guide</a>.</li>
+      <li><code>skipLengthCache</code> hook was removed, <code>indexMapper</code> is now responsible for the cache and length.</li>
+      <li>The <code>manualColumnFreeze</code> plugin doesn't use the <code>manualColumnMove</code> plugin anymore.</li>
+      <li>The <code>collapsibleColumns</code> plugin doesn't use the <code>hiddenColumns</code> plugin anymore.</li>
+      <li>The <code>nestedRows</code> and <code>filters</code> plugins don't use the <code>trimRows</code> plugin anymore.</li>
+      <li>The <code>minSpareRows</code> and <code>minRows</code> options will ensure that the number of visible rows corresponds to the value provided to them (for example, the <code>trimRows</code> plugin won't have an impact on the number of displayed rows).</li>
+      <li><code>toPhysicalRow</code> and <code>toVisualColumn</code> now return <code>null</code> for non-existant rows/columns. <a href="https://github.com/handsontable/handsontable/pull/5945" target="_blank">#5945</a>).</li>
+      <li>The <code>afterLoadData</code> hook receives a different set of arguments. It used to be just the initialLoad flag, now the first argument is <code>sourceData</code>, followed by <code>initialLoad</code>.</li>
+      <li>The <code>manualColumnFreeze</code> plugin will now put the unfrozen columns right next to the last frozen one.</li>
+      <li>The <code>RecordTranslator</code> object and the <code>t</code> property available in the plugins were removed.</li>
+      <li>After-prefixed hooks (<code>afterLoadData</code>, <code>afterFilter</code>, etc.) are now called just before the <code>render</code> call.</li>
+      <li>Newly created rows and columns are now placed in the source data in the place calculated from its position in the visual context (they "stick" to their adjacent rows/columns). It also applies to moved rows and columns.</li>
+      <li>When the <code>nestedRows</code> plugin is <code>enabled</code>, moving rows will be possible only using the UI or by calling the <code>dragRows</code> method of the <code>manualRowMove</code> plugin.</li>
+      <li>The <code>beforeRowResize</code>, <code>afterRowResize</code>, <code>beforeColumnResize</code>, <code>afterColumnResize</code> hooks have the order of their arguments rearranged for the sake of consistency with other hooks and to fix an issue where multiple hooks didn't get the modified value in the pipeline: <a href="https://github.com/handsontable/handsontable/issues/3328" target="_blank">#3328</a>.</li>
+      <li>Changed the argument structure in <code>collapsibleColumns</code>' <code>toggleCollapsibleSection</code> method: <a href="https://github.com/handsontable/handsontable/issues/6193" target="_blank">#6193</a>.</li>
+      <li>The following sublist shows changes related to the refactor of <code>HiddenColumns</code> and <code>CollapsibleColumns</code>. They will be compatible with upcoming <code>IndexMappers</code> <a href="https://github.com/handsontable/handsontable/pull/5945" target="_blank">#5945</a> along with other adjustments <a href="https://github.com/handsontable/handsontable/pull/6547" target="_blank">#6547</a>:
+        <ul>
+          <li>Hidden indexes aren’t rendered. As a consequence hooks <code>beforeValueRender</code>, <code>beforeRenderer</code>, <code>afterRenderer</code>, <code>modifyColWidth</code>, <code>beforeStretchingColumnWidth</code> etc. will be executed just for some of the columns (just the rendered ones).</li>
+          <li>The <code>getColWidth</code> for hidden index will return 0 – it used to return 0.1. Also, it will no longer be called internally, the need can be now achieved by managers of rows and columns.</li>
+          <li>The <code>modifyColWidth</code> hook will not be called internally. However, it will be executed when the user will call the <code>getColWidth</code>.</li>
+          <li><code>listen</code> function from the core API used to accept <code>modifyDocumentFocus</code> as optional parameter, this parameter was removed.</li>
+          <li><code>CustomBorders</code> plugin was adapted to work with <code>HiddenColumns</code> properly. From now on hiding cells at the start or the end of the range will also hide their borders. Hiding a single cell with borders will hide all of its borders. <a href="https://github.com/handsontable/handsontable/pull/7083" target="_blank">#7083</a>.</li>
+          <li><code>CollapsibleColumns</code> will no longer use <code>HiddenColumns</code> plugin to work. <a href="https://github.com/handsontable/handsontable/issues/6204" target="_blank">#6204</a>.</li>
+          <li>Adjusted <code>HiddenColumns</code> to be compatible with upcoming <code>IndexMappers</code>. <a href="https://github.com/handsontable/handsontable/pull/6547" target="_blank">#6547</a>.</li>
+          <li><code>hiddenRow</code> and <code>hiddenColumn</code> hooks were removed. They were used to check if a given index is hidden in the <code>HiddenColumns</code> and <code>HiddenRows</code> plugins. Since now there may be more sources of hiding indexes they have been replaced by <code>IndexMapper</code> with the new <code>isHidden</code> method. It keeps the broad information about hidden indexes and their sources.</li>
+          <li><code>rowOffset</code> and <code>colOffset</code> were removed since they aliased the methods from Walkontable. <a href="https://github.com/handsontable/handsontable/pull/6547" target="_blank">#6547</a>.</li>
+        </ul>
+      </li>
+      <li>Changes related to adjusting <code>HiddenRows</code> to new <code>IndexMapper</code> architecture are <a href="https://github.com/handsontable/handsontable/issues/6177" target="_blank">#6177</a>:
+        <ul>
+          <li>Adjusted <code>HiddenRows</code> to new <code>IndexMapper</code> architecture. <a href="https://github.com/handsontable/handsontable/issues/6177" target="_blank">#6177</a>.</li>
+        </ul>
+      </li>
+      <li>Selection behavior changed when hiding cells from the <code>ContextMenu</code>. Now it selects a column on the right when there is space on right up to the last selected column. Selecting a column on the left works the same as in the case of right selection. <a href="https://github.com/handsontable/handsontable/issues/6874" target="_blank">#6874</a>.</li>
+      <li>Developed a unified way to identify HOT "input" elements. All input elements owned by HOT got an attribute "data-hot-input" which are identified by that key. <a href="https://github.com/handsontable/handsontable/issues/6383" target="_blank">#6383</a>.</li>
+      <li><code>NestedHeaders</code> plugin was rewritten, from now on, only a tree-like structure will be allowed, meaning, there will be no possibility to place nested headers in-between layers. <a href="https://github.com/handsontable/handsontable/pull/6716" target="_blank">#6716</a></li>
+      <li>The right mouse button (<code>RMB</code>) click on the corner when there is no data will show all options disabled. <a href="https://github.com/handsontable/handsontable/pull/6547" target="_blank">#6547</a>.</li>
+      <li>Left mouse button (<code>LMB</code>) click on the top left corner will now select all cells along with their headers. <a href="https://github.com/handsontable/handsontable/pull/6547" target="_blank">#6547</a>.</li>
+      <li>Removed the experimental <code>GanttChart</code> plugin. <a href="https://github.com/handsontable/handsontable/issues/7022" target="_blank">#7022</a>.</li>
+    </ul>
+    <strong>New features</strong>
+    <ul>
+      <li>Added the Index Mapper architecture and its API. <a href="https://github.com/handsontable/handsontable/issues/5112" target="_blank">#5112</a> (more information available in the PRs <a href="https://github.com/handsontable/handsontable/pull/5945" target="_blank">#5945</a> with additional
+ changes in <a href="https://github.com/handsontable/handsontable/pull/6547" target="_blank">#6547</a>)</li>
+      <li>Added a new <code>batch</code> method. <a href="https://github.com/handsontable/handsontable/pull/5945" target="_blank">#5945</a> along with other adjustments (<a href="https://github.com/handsontable/handsontable/pull/7068" target="_blank">#7068</a>)</li>
+    </ul>
+    <strong>Depreciations</strong>
+    <ul>
+      <li>The <code>observeChanges</code> plugin is no longer enabled by <code>columnSorting</code> and became deprecated. <a href="https://github.com/handsontable/handsontable/pull/5945" target="_blank">#5945</a></li>
+      <li><code>HeaderTooltips</code> plugin becomes deprecated and will be removed in the next major version. <a href="https://github.com/handsontable/handsontable/issues/7023" target="_blank">#7023</a></li>
+      <li>Internet Explorer support is deprecated and will be removed by the end of the year. <a href="https://github.com/handsontable/handsontable/issues/7026" target="_blank">#7026</a></li>
+    </ul>
+    <strong>Changelog</strong>
+    <ul>
+      <li>Added <code>modifySourceData</code> hook and <code>setSourceDataAtCell</code> method. <a href="https://github.com/handsontable/handsontable/issues/6664" target="_blank">#6664</a></li>
+      <li>Added new argument to <code>scrollViewportTo</code> method: optional <code>considerHiddenIndexes</code> which is a <code>boolean</code>. <a href="https://github.com/handsontable/handsontable/pull/6547" target="_blank">#6547</a></li>
+      <li>Added additional information available in the cell meta object - the language. <a href="https://github.com/handsontable/handsontable/pull/6254" target="_blank">#6254</a>.</li>
+      <li>Added a possibility to allow cancelling of <code>autofill</code> in the <code>beforeAutofill</code> hook. <a href="https://github.com/handsontable/handsontable/issues/4441" target="_blank">#4441</a></li>
+      <li>Added support for newer versions of moment, numbro and pikaday. <a href="https://github.com/handsontable/handsontable/issues/5159" target="_blank">#5159</a></li>
+      <li>Added <code>afterAutoFill</code> hook. <a href="https://github.com/handsontable/handsontable/issues/6135" target="_blank">#6135</a></li>
+      <li>Added deprecated warning messages mechanism for plugin hooks. <a href="https://github.com/handsontable/handsontable/pull/6613" target="_blank">#6613</a></li>
+      <li>Added missing types for `instance.undoRedo`. <a href="https://github.com/handsontable/handsontable/issues/6346" target="_blank">#6346</a></li>
+      <li>Added <code>countRenderableColumns</code> method to the <code>TableView</code>. <a href="https://github.com/handsontable/handsontable/issues/6177" target="_blank">#6177</a></li>
+      <li>Added missing "hide" property in <code>CustomBorders</code> typings. <a href="https://github.com/handsontable/handsontable/issues/6788" target="_blank">#6788</a></li>
+      <li>Added <code>beforeSetCellMeta</code> hook with an ability to cancel the changes. <a href="https://github.com/handsontable/handsontable/issues/5388" target="_blank">#5388</a></li>
+      <li>Added additional test for autofill plugin. <a href="https://github.com/handsontable/handsontable/issues/6756" target="_blank">#6756</a></li>
+      <li>Changed how <code>manualRowMove</code> and <code>manualColumnMove</code> plugins works <a href="https://github.com/handsontable/handsontable/pull/5945" target="_blank">#5945</a></li>
+      <li>Click on a row header will select all cells (also hidden). <a href="https://github.com/handsontable/handsontable/issues/2391" target="_blank">#2391</a></li>
+      <li>Extracted Cell-Meta logic from Core to separate module. <a href="https://github.com/handsontable/handsontable/pull/6254" target="_blank">#6254</a></li>
+      <li>The <code>CellMeta</code> manager was refactored for future features and improvements. <a href="https://github.com/handsontable/handsontable/issues/6233" target="_blank">#6233</a></li>
+      <li>Rows can be resized to less than <code>rowHeights</code>. <a href="https://github.com/handsontable/handsontable/issues/6149" target="_blank">#6149</a></li>
+      <li>Left mouse button (LMB) click on the corner will now select all cells. <a href="https://github.com/handsontable/handsontable/pull/6547" target="_blank">#6547</a></li>
+      <li>The right mouse button (<code>RMB</code>) click on the corner, column and row headers will show just some options, defined by newly created specification <a href="https://github.com/handsontable/handsontable/pull/7082" target="_blank">#7082</a></li>
+      <li>Hidden indexes will no longer be rendered, as a consequence <code>afterRenderer</code>, <code>modifyColWidth</code>, <code>beforeStretchingColumnWidth</code> will be executable only on visible (meaning, rendered) rows and columns. <a href="https://github.com/handsontable/handsontable/pull/6547" target="_blank">#6547</a></li>
+      <li>The <code>getColWidth</code> for hidden index will return 0 - it used to return 0.1 <a href="https://github.com/handsontable/handsontable/pull/6547" target="_blank">#6547</a></li>
+      <li>The <code>modifyColWidth</code> hook isn't called internally. However, it will be executed when the user will call the <code>getColWidth</code>. <a href="https://github.com/handsontable/handsontable/pull/6547" target="_blank">#6547</a></li>
+      <li>Hidden rows/columns won't rendered anymore. As a consequence hooks <code>beforeValueRender</code>, <code>beforeRenderer</code>, <code>afterRenderer</code>, <code>modifyColWidth</code>, <code>beforeStretchingColumnWidth</code> etc. will be executed just for some of the columns (just the renderable ones). <a href="https://github.com/handsontable/handsontable/pull/6547" target="_blank">#6547</a></li>
+      <li>Selection behavior changed when hiding cells from the <code>ContextMenu</code>, now it is selecting a column on the right when there is space on right to the last selected column, selecting a column on the left otherwise. <a href="https://github.com/handsontable/handsontable#6547" target="_blank">#6547</a></li>
+      <li>Developed a unified way to identify HOT "input" elements. All input elements owned by HOT got an attribute "data-hot-input" which are identified by that key. <a href="https://github.com/handsontable/handsontable/issues/6383" target="_blank">#6383</a></li>
+      <li><code>NestedHeaders</code> plugin was rewritten, from now on, only a tree-like structure will be allowed, meaning, there will be no possibility to place nested headers in-between layers. <a href="https://github.com/handsontable/handsontable/pull/6716" target="_blank">#6716</a></li>
+      <li><code>CustomBorders</code> plugin was adapted to work with <code>HiddenColumns</code> properly, from now on hiding cells at the start or at the end of a range will also hide their borders. Also, hiding a single cell with borders will hide all of its borders. <a href="https://github.com/handsontable/handsontable/pull/7083" target="_blank">#7083</a></li>
+      <li><code>CollapsibleColumns</code> will no longer use <code>HiddenColumns</code> plugin to work. <a href="https://github.com/handsontable/handsontable/issue/6204" target="_blank">#6204</a></li>
+      <li>Modifying the table's data by reference and calling `render()` will not work properly anymore. From this point onward, all the data-related operations need to be performed using the API methods, such as <code>populateFromArray</code> or <code>setDataAtCell</code>. <a href="https://github.com/handsontable/handsontable/pull/5945" target="_blank">#5945</a></li>
+      <li>Removed dependencies between plugins: the <code>manualColumnFreeze</code> plugin doesn't use the <code>manualColumnMove</code>, the <code>collapsibleColumns</code> plugin doesn't use the <code>hiddenColumns</code> plugin, <code>nestedRows</code> plugin doesn't use the <code>trimRows</code> plugin, <code>filters</code> plugin doesn't use the <code>trimRows</code> plugin anymore. <a href="https://github.com/handsontable/handsontable/pull/5945) along with other adjustments [#6547](https:// github.com/handsontable/handsontable/pull/6547" target="_blank">#5945</a>:
+      <li>The <code>minSpareRows</code> and <code>minRows</code> options will ensure that the number of visible rows corresponds to the value provided to them (for example, the <code>trimRows</code> plugin won't have an impact on the number of displayed rows). <a href="https://github.com/handsontable/handsontable/pull/5945" target="_blank">#5945</a></li>
+      <li><code>toPhysicalRow</code> and <code>toVisualColumn</code> now return <code>null</code> for non-existant rows/columns. <a href="https://github.com/handsontable/handsontable/pull/5945" target="_blank">#5945</a></li>
+      <li>The <code>afterLoadData</code> hook receives a different set of arguments. It used to be just the initialLoad flag, now the first argument is <code>sourceData</code>, followed by <code>initialLoad</code>. <a href="https://github.com/handsontable/handsontable/pull/5945" target="_blank">#5945</a></li>
+      <li>The <code>manualColumnFreeze</code> plugin unfreezes the column just after the "line of freeze". <a href="https://github.com/handsontable/handsontable/pull/5945" target="_blank">#5945</a></li>
+      <li>The <code>RecordTranslator</code> object and the <code>t</code> property available in the plugins were removed. <a href="https://github.com/handsontable/handsontable/pull/5945" target="_blank">#5945</a></li>
+      <li>After-prefixed hooks (<code>afterLoadData</code>, <code>afterFilter</code>, etc.) are now called just before the <code>render</code> call. <a href="https://github.com/handsontable/handsontable/pull/5945" target="_blank">#5945</a></li>
+      <li>Newly created rows and columns are now placed in the source data in the place calculated from its position in the visual context (they "stick" to their adjacent rows/columns). It also applies to moved rows and columns. <a href="https://github.com/handsontable/handsontable/pull/5945" target="_blank">#5945</a></li>
+      <li>When the <code>nestedRows</code> plugin is <code>enabled</code>, moving rows will be possible only using the UI or by calling the <code>dragRows</code> method of the <code>manualRowMove</code> plugin. <a href="https://github.com/handsontable/handsontable/pull/5945" target="_blank">#5945</a></li>
+      <li>The <code>beforeRowResize</code>, <code>afterRowResize</code>, <code>beforeColumnResize</code>, <code>afterColumnResize</code> hooks have the order of their arguments rearranged for the sake of consistency with other hooks. <a href="https://github.com/handsontable/handsontable/issues/3328" target="_blank">#3328</a></li>
+      <li>Changed the argument structure in <code>collapsibleColumns</code>' <code>toggleCollapsibleSection</code> method. <a href="https://github.com/handsontable/handsontable/issues/6193" target="_blank">#6193</a></li>
+      <li>Updated the <code>moment</code>, <code>numbro</code> and <code>pikaday</code> dependencies to their latest versions. <a href="https://github.com/handsontable/handsontable/issues/6610" target="_blank">#6610</a></li>
+      <li>Standardize the `z-index` properties between the overlays. <a href="https://github.com/handsontable/handsontable/pull/6269" target="_blank">#6269</a></li>
+      <li><code>HeaderTooltips</code> plugin becomes deprecated and will be removed in the next major version. <a href="https://github.com/handsontable/handsontable/issues/7023" target="_blank">#7023</a></li>
+      <li>IE support is depreacated and will removed by the end of the year. <a href="https://github.com/handsontable/handsontable/issues/7026" target="_blank">#7026</a></li>
+      <li>Removed <code>firstVisibleColumn</code> CSS class as no longer needed. <a href="https://github.com/handsontable/handsontable/pull/6547" target="_blank">#6547</a></li>
+      <li>Removed helpers that covered IE8 support or are not needed anymore. <a href="https://github.com/handsontable/handsontable/issues/6525" target="_blank">#6525</a></li>
+      <li>Removed old unnecessary warning about <code>beforeChange</code> callback. <a href="https://github.com/handsontable/handsontable/issues/6792" target="_blank">#6792</a></li>
+      <li>Removed <code>debug</code> key (key, css, docs). <a href="https://github.com/handsontable/handsontable/issues/6672" target="_blank">#6672</a></li>
+      <li>Removed <code>hiddenRow</code> and <code>hiddenColumn</code> hooks. <a href="https://github.com/handsontable/handsontable/pull/6547" target="_blank">#6547</a></li>
+      <li>Removed optional argument <code>modifyDocumentFocus</code> from the <code>listen</code> function. <a href="https://github.com/handsontable/handsontable/pull/6547" target="_blank">#6547</a></li>
+      <li>Removed <code>rowOffset</code> and <code>colOffset</code> public API methods since they aliased the methods from Walkontable. <a href="https://github.com/handsontable/handsontable/pull/6547" target="_blank">#6547</a></li>
+      <li>Removed the experimental <code>GanttChart</code> plugin. <a href="https://github.com/handsontable/handsontable/issues/7022" target="_blank">#7022</a></li>
+      <li>Removed post-install warning from package.json file <a href="https://github.com/handsontable/handsontable/pull/6608" target="_blank">#6608</a></li>
+      <li>The <code>modifyRow</code>, <code>modifyCol</code>, <code>unmodifyRow</code>, <code>unmodifyCol</code> and <code>skipLengthCache</code> hooks are no longer needed and were removed. <a href="https://github.com/handsontable/handsontable/pull/5945" target="_blank">#5945</a></li>
+      <li>Fixed a problem with data not being added to the table properly with the <code>columnSorting</code> option enabled. <a href="https://github.com/handsontable/handsontable/issues/2685" target="_blank">#2685</a></li>
+      <li>Fixed a problem with <code>loadData</code> not resetting the row order changed by the <code>manualRowMove</code> plugin. <a href="https://github.com/handsontable/handsontable/issues/3568" target="_blank">#3568</a></li>
+      <li>Fixed a bug, where using <code>alter</code>'s <code>insert_row</code> after using the <code>loadData</code> method and sorting the data would add unintentional additional rows to the table. <a href="https://github.com/handsontable/handsontable/issues/3809" target="_blank">#3809</a></li>
+      <li>Fixed a bug, where blank rows appeared in the middle of the table after using <code>loadData</code> along with the <code>minSpareRows</code> option. <a href="https://github.com/handsontable/handsontable/issues/3937" target="_blank">#3937</a></li>
+      <li>Fixed a problem with the <code>columnSummary</code> plugin not working properly after adding new rows using the Context Menu and sorting the data. <a href="https://github.com/handsontable/handsontable/issues/3924" target="_blank">#3924</a></li>
+      <li>Fixed a bug, where calling <code>loadData</code> with an object-based data source would not work properly. <a href="https://github.com/handsontable/handsontable/issues/4204" target="_blank">#4204</a></li>
+      <li>Fixed a problem with the Hidden Columns settings being reset after calling <code>updateSettings</code>. <a href="https://github.com/handsontable/handsontable/issues/4121" target="_blank">#4121</a></li>
+      <li>Fixed a bug with the <code>filters</code> plugin using incorrect indexes after moving and/or sorting the table. <a href="https://github.com/handsontable/handsontable/issues/4442" target="_blank">#4442</a></li>
+      <li>Fixed a bug that caused a column to contain improper data after moving it to index <code>0</code>. <a href="https://github.com/handsontable/handsontable/issues/4470" target="_blank">#4470</a></li>
+      <li>Fixed a bug with the <code>afterRowMove</code> hook receiving an improper <code>target</code> argument. <a href="https://github.com/handsontable/handsontable/issues/4501" target="_blank">#4501</a></li>
+      <li>Fixed a problem with the <code>manualColumnFreeze</code> plugin enabling <code>manualColumnMove</code>, even if it was declared as <code>false</code>. <a href="https://github.com/handsontable/handsontable/issues/4553" target="_blank">#4553</a></li>
+      <li>Fixed a problem with plugins using <code>arrayMappers</code> not working properly after updating the dataset. <a href="https://github.com/handsontable/handsontable/issues/4567" target="_blank">#4567</a></li>
+      <li>Fixed a bug, where calling <code>loadData</code> with <code>minSpareRows</code> and <code>manualRowMove</code> enabled caused the table to improperly load the data. <a href="https://github.com/handsontable/handsontable/issues/4576" target="_blank">#4576</a></li>
+      <li>Fixed a bug, where enabling <code>columnSorting</code> caused the <code>manualColumnFreeze</code> to be unusable. <a href="https://github.com/handsontable/handsontable/issues/4601" target="_blank">#4601</a></li>
+      <li>Fixed a problem, where the columns were assigned improper widths after inserting additional columns or removing any of them. <a href="https://github.com/handsontable/handsontable/issues/4666" target="_blank">#4666</a></li>
+      <li>Fixed a bug, where moving rows was impossible while <code>persistentState</code> was enabled. <a href="https://github.com/handsontable/handsontable/issues/4713" target="_blank">#4713</a></li>
+      <li>Fixed a bug, where <code>manualColumnMove</code> didn't work if the dataset was empty. <a href="https://github.com/handsontable/handsontable/issues/4926" target="_blank">#4926</a></li>
+      <li>Fixed a bug with the <code>collapseAll</code> method from the <code>collapsibleColumns</code> plugin did not work properly if <code>columnSorting</code> was enabled. <a href="https://github.com/handsontable/handsontable/issues/4999" target="_blank">#4999</a></li>
+      <li>Fixed a bug, where calling <code>loadData</code> with <code>minSpareRows</code> enabled would cause unwanted blank rows to appear. <a href="https://github.com/handsontable/handsontable/issues/5707" target="_blank">#5707</a></li>
+      <li>Fixed a bug with the <code>afterColumnMove</code> hook receiving an improper <code>target</code> argument. <a href="https://github.com/handsontable/handsontable/issues/5173" target="_blank">#5173</a></li>
+      <li>Fixed a problem, where filtering data after moving rows would not work properly. <a href="https://github.com/handsontable/handsontable/issues/5178" target="_blank">#5178</a></li>
+      <li>Fixed a bug, where calling <code>loadData</code> made <code>NaN</code> appear in the column headers. <a href="https://github.com/handsontable/handsontable/issues/5369" target="_blank">#5369</a></li>
+      <li>Fixed a bug with the <code>skipColumnOnPaste</code> option not working properly when using <code>columnSorting</code> and <code>hiddenColumns</code>. <a href="https://github.com/handsontable/handsontable/issues/5824" target="_blank">#5824</a></li>
+      <li>Fixed a bug with the <code>trimRows</code> plugin did not work properly after moving rows. <a href="https://github.com/handsontable/handsontable/issues/5860" target="_blank">#5860</a></li>
+      <li>Fixed a problem with <code>minSpareRows</code> not working properly with the <code>trimRows</code> plugin being used. <a href="https://github.com/handsontable/handsontable/issues/5862" target="_blank">#5862</a></li>
+      <li>Fixed a problem, where it was impossible to filter the data declared in the <code>nestedRows</code> plugin. <a href="https://github.com/handsontable/handsontable/issues/5889" target="_blank">#5889</a></li>
+      <li>Fixed a bug, where filtering and sorting data would cause the <code>toVisualRow</code> method to return the wrong results. <a href="https://github.com/handsontable/handsontable/issues/5890" target="_blank">#5890</a></li>
+      <li>Fixed a bug with the <code>filters</code> and <code>trimRows</code> plugins not working properly alongside each other. <a href="https://github.com/handsontable/handsontable/issues/5915" target="_blank">#5915</a></li>
+      <li>Fixed a bug, where <code>manualColumnMove</code> would not work properly when the data object properties count would be lower than the table column count. <a href="https://github.com/handsontable/handsontable/issues/5931" target="_blank">#5931</a></li>
+      <li>Fixed a bug with the <code>trimRows</code> plugin did not work properly with the <code>startRows</code> option. <a href="https://github.com/handsontable/handsontable/issues/5953" target="_blank">#5953</a></li>
+      <li>Fixed a problem, where using <code>loadData</code> after sorting would not work as expected. <a href="https://github.com/handsontable/handsontable/issues/5953" target="_blank">#5956</a></li>
+      <li>Fixed a problem with the <code>beforeColumnMove</code> and <code>afterColumnMove</code> hooks not containing information about their destination indexes. <a href="https://github.com/handsontable/handsontable/issues/6005" target="_blank">#6005</a></li>
+      <li>Fixed a problem where using <code>filters</code> and <code>minSpareRows</code> would make the table add an empty row at the beginning of the table. <a href="https://github.com/handsontable/handsontable/issues/5953" target="_blank">#6278</a></li>
+      <li>Fixed a bug with the <code>manualRowMove</code> plugin would duplicate data in the moved rows, when used with a row index greater than the table row count. <a href="https://github.com/handsontable/handsontable/issues/5953" target="_blank">#6088</a></li>
+      <li>Fixed a bug, where the <code>toVisualRow</code> method returned <code>null</code> when using the <code>trimRows</code> and <code>columnSorting</code> plugins together. <a href="https://github.com/handsontable/handsontable/issues/6310" target="_blank">#6310</a></li>
+      <li>Fixed a problem, where calling <code>updateSettings</code> in the <code>afterColumnMove</code> hook callback would have no effect. <a href="https://github.com/handsontable/handsontable/issues/4480" target="_blank">#4480</a></li>
+      <li>Fixed a bug, where calling <code>loadData</code> would make the <code>filters</code> plugin to not behave as expected. <a href="https://github.com/handsontable/handsontable/issues/5244" target="_blank">#5244</a></li>
+      <li>Fixed a bug, where detaching a child from a parent in the <code>nestedRows</code> plugin would cause a `+/-` button misalignment. <a href="https://github.com/handsontable/handsontable/issues/5900" target="_blank">#5900</a></li>
+      <li>Fixed a problem with the <code>columnSummary</code> plugin creating a doubled summary row. <a href="https://github.com/handsontable/handsontable/issues/5794" target="_blank">#5794</a></li>
+      <li>Fixed a bug, where moving children between parents using the <code>nestedRows</code> plugin would throw an error. <a href="https://github.com/handsontable/handsontable/issues/6066" target="_blank">#6066</a></li>
+      <li>Fixed a bug, where adding rows by modifying the data by reference while using the <code>nestedRows</code> plugin would throw an error. <a href="https://github.com/handsontable/handsontable/issues/3914" target="_blank">#3914</a></li>
+      <li>Fixed a bug, where merging cells would conflict with the <code>columnSorting</code> plugin. <a href="https://github.com/handsontable/handsontable/issues/6086" target="_blank">#6086</a></li>
+      <li>Fixed a bug, where the row headers would stay visible after removing all the table columns. <a href="https://github.com/handsontable/handsontable/issues/6412" target="_blank">#6412</a></li>
+      <li>Fixed an issue where Hidden columns become visible when the user ran <code>updateSettings</code>. <a href="https://github.com/handsontable/handsontable/issues/4121" target="_blank">#4121</a></li>
+      <li>Fixed an issue where using <code>hiddenColumns</code> and <code>stretchH</code> showed a redundant horizontal scrollbar. <a href="https://github.com/handsontable/handsontable/issues/4181" target="_blank">#4181</a></li>
+      <li>Fixed an issue in which if the last column was a hidden column and <code>stretchH</code> was enabled, the last column was displayed. <a href="https://github.com/handsontable/handsontable/issues/4370" target="_blank">#4370</a></li>
+      <li>Fixed an issue where <code>updateSettings</code> performance was very low because of <code>hiddenColumns</code> being rendered. <a href="https://github.com/handsontable/handsontable/issues/4381" target="_blank">#4381</a></li>
+      <li>Fixed an issue where collapse was not working correctly with custom cell renderers. <a href="https://github.com/handsontable/handsontable/issues/4716" target="_blank">#4716</a></li>
+      <li>Fixed an incorrect header name when user defined more columns in the <code>nestedHeaders</code> plugin. <a href="https://github.com/handsontable/handsontable/issues/4716" target="_blank">#4716</a></li>
+      <li>Fixed an issue where <code>hiddenColumns</code> did not work properly with <code>columnSorting</code>. <a href="https://github.com/handsontable/handsontable/issues/5571" target="_blank">#5571</a></li>
+      <li>Fixed an issue where <code>manualColumnMove</code> should work with <code>hiddenColumns</code>. <a href="https://github.com/handsontable/handsontable/issues/5598" target="_blank">#5598</a></li>
+      <li>Fixed an issue where <code>hiddenColumns</code> option interfered with the keyboard movement. <a href="https://github.com/handsontable/handsontable/issues/5704" target="_blank">#5704</a></li>
+      <li>Fixed an issue where after hiding the first two rows, the row headers became de-synchronized by 1px. <a href="https://github.com/handsontable/handsontable/issues/5817" target="_blank">#5817</a></li>
+      <li>Fixed an issue where hiding columns affected selection of hidden columns. <a href="https://github.com/handsontable/handsontable/issues/5871" target="_blank">#5871</a></li>
+      <li>Fixed an issue where if <code>collapsibleColumns</code> were set to <code>true</code> it was impossible to exit selection mode. <a href="https://github.com/handsontable/handsontable/issues/5875" target="_blank">#5875</a></li>
+      <li>Fixed an issue where <code>hiddenColumns</code> did not work properly with `autoWrapRow/autoWrapCol`. <a href="https://github.com/handsontable/handsontable/issues/5877" target="_blank">#5877</a></li>
+      <li>Fixed an issue on IE where hiding the first column caused a display of double border for top left corner. <a href="https://github.com/handsontable/handsontable/issues/5881" target="_blank">#5881</a></li>
+      <li>Fixed an issue where <code>nestedHeaders</code> duplicated a header name if more columns are added. <a href="https://github.com/handsontable/handsontable/issues/5882" target="_blank">#5882</a></li>
+      <li>Fixed an issue where <code>hiddenColumns</code> plugin unset cell's <code>renderer</code>. <a href="https://github.com/handsontable/handsontable/issues/5883" target="_blank">#5883</a></li>
+      <li>Fixed an issue where <code>hiddenColumns</code> had stored visual indexes and should have used physical indexes. <a href="https://github.com/handsontable/handsontable/issues/5909" target="_blank">#5909</a></li>
+      <li>Fixed an issue where hidden columns should be unrecoverable. <a href="https://github.com/handsontable/handsontable/issues/6113" target="_blank">#6113</a></li>
+      <li>Fixed an issue where row selection ignored columns that are hidden at the end. <a href="https://github.com/handsontable/handsontable/issues/6181" target="_blank">#6181</a></li>
+      <li>Fixed an issue where defining data with more data than used in <code>columns</code> caused an issue with showing column once it was hidden. <a href="https://github.com/handsontable/handsontable/issues/6426" target="_blank">#6426</a></li>
+      <li>Fixed an issue where hiding rows, while there was a merged area, involved caused data shifting and unexpected merged area coordinates. <a href="https://github.com/handsontable/handsontable/issues/6376" target="_blank">#6376</a></li>
+      <li>Fixed an issue where <code>colHeader</code> was truncated after moving <code>hiddenColumn</code>. <a href="https://github.com/handsontable/handsontable/issues/6463" target="_blank">#6463</a></li>
+      <li>Fixed an issue where the last hidden column was visible upon column resizing. <a href="https://github.com/handsontable/handsontable/issues/6557" target="_blank">#6557</a></li>
+      <li>Fixed an issue where with hiding columns after moved them manually. <a href="https://github.com/handsontable/handsontable/issues/6668" target="_blank">#6668</a></li>
+      <li>Fixed an issue where expanding a collapsed column caused expanding of a child columns except for the first one. <a href="https://github.com/handsontable/handsontable/issues/5792" target="_blank">#5792</a></li>
+      <li>Fixed an issue where setting <code>columnSorting</code> to <code>true</code> (on initialization or via <code>updateSettings</code>) made headers non-collapsible programmatically via <code>collapseAll</code> method. <a href="https://github.com/handsontable/handsontable/issues/4999" target="_blank">#4999</a></li>
+      <li>Fixed an issue where <code>customBorders</code> plugin was missing in the definition file. <a href="https://github.com/handsontable/handsontable/issues/6477" target="_blank">#6477</a></li>
+      <li>Fixed incorrect size of <code>wtHider</code>and <code>wtHolder</code> in overlays. <a href="https://github.com/handsontable/handsontable/issues/3873" target="_blank">#3873</a></li>
+      <li>Fixed an issue where <code>updateSettings</code> could not update <code>tableClassName</code>. <a href="https://github.com/handsontable/handsontable/issues/6295" target="_blank">#6295</a></li>
+      <li>Fixed an issue where JSON data with empty value was losing some double quotes when pasted into a cell. <a href="https://github.com/handsontable/handsontable/issues/6167" target="_blank">#6167</a></li>
+      <li>Fixed an issue where some classes for the table were missing if one of them was empty. <a href="https://github.com/handsontable/handsontable/issues/6371" target="_blank">#6371</a></li>
+      <li>Fixed an issue where clicking in a contextmenu's border opened the native context menu. <a href="https://github.com/handsontable/handsontable/issues/6218" target="_blank">#6218</a></li>
+      <li>Fixed the error that ocurred during loading of E2E test runner in Edge and IE. <a href="https://github.com/handsontable/handsontable/issues/6713" target="_blank">#6713</a></li>
+      <li>Fixed the inconsistency and problems with adding rows from the corner when all rows are trimmed. <a href="https://github.com/handsontable/handsontable/issues/7061" target="_blank">#7061</a></li>
+      <li>Fixed an issue where using read-only and alignment from the context menu was disabled when all columns were selected. <a href="https://github.com/handsontable/handsontable/issues/7114" target="_blank">#7114</a></li>
+      <li>Fixed an issue where setting focus to a column to open context menu after applying a filter was impossible. <a href="https://github.com/handsontable/handsontable/issues/7005" target="_blank">#7005</a></li>
+      <li>Fixed an issue where <code>minSpareCols</code> with <code>undo</code> added too many columns. <a href="https://github.com/handsontable/handsontable/issues/6363" target="_blank">#6363</a></li>
+      <li>Fixed the inconsistency in selection when using the right mouse button for first row/column. <a href="https://github.com/handsontable/handsontable/issues/6334" target="_blank">#6334</a></li>
+      <li>Fixed an issue where undoing column removal caused column headers to lack a header. <a href="https://github.com/handsontable/handsontable/issues/6992" target="_blank">#6992</a></li>
+      <li>Fixed an issue where <code>readOnly</code> for column was erased (did not apply) if filters were used. <a href="https://github.com/handsontable/handsontable/issues/6559" target="_blank">#6559</a></li>
+      <li>Fixed an issue where readonly property was lost after declining confirmation in <code>beforeRemoveCol</code> or <code>beforeRemoverow</code>. <a href="https://github.com/handsontable/handsontable/issues/6332" target="_blank">#6332</a></li>
+      <li>Fixed an issue where <code>readOnly</code> state for some cells was lost when rows with <code>trimRows</code> turned on were removed. <a href="https://github.com/handsontable/handsontable/issues/6990" target="_blank">#6990</a></li>
+      <li>Fixed incorrect column header highlight when merged cells were unmerged and <code>hiddenColumns</code> were used. <a href="https://github.com/handsontable/handsontable/issues/6978" target="_blank">#6978</a></li>
+      <li>Fixed an issue where after hiding the first row, the second row top border disappeared. <a href="https://github.com/handsontable/handsontable/issues/6977" target="_blank">#6977</a></li>
+      <li>Fixed an issue with incorrect selection after hiding the first row. <a href="https://github.com/handsontable/handsontable/issues/6831" target="_blank">#6831</a></li>
+      <li>Fixed an issue where hiding the first row caused blue highlight in column headers selection to disappear. <a href="https://github.com/handsontable/handsontable/issues/6976" target="_blank">#6976</a></li>
+      <li>Fixed wrong selection area after sorting with hidden rows. <a href="https://github.com/handsontable/handsontable/issues/6386" target="_blank">#6386</a></li>
+      <li>Fixed an issue where it was not possible to use <code>selectAll</code> when the first row was hidden. <a href="https://github.com/handsontable/handsontable/issues/6975" target="_blank">#6975</a></li>
+      <li>Fixed an issue where it was possible to select hidden row or column. <a href="https://github.com/handsontable/handsontable/issues/6974" target="_blank">#6974</a></li>
+      <li>Fixed an issue where row indexes changed if the first row was hiding after moving row from bottom to top. <a href="https://github.com/handsontable/handsontable/issues/6965" target="_blank">#6965</a></li>
+      <li>Fixed an issue where selection skipped the highest parent. <a href="https://github.com/handsontable/handsontable/issues/6770" target="_blank">#6770</a></li>
+      <li>Fixed an iisue where <code>nestedRows</code> blocked table from loading if data was not provided. <a href="https://github.com/handsontable/handsontable/issues/6928" target="_blank">#6928</a></li>
+      <li>Fixed an isse where it was impossible to go back to the original cell after dragging down. <a href="https://github.com/handsontable/handsontable/issues/4233" target="_blank">#4233</a></li>
+      <li>Fixed an issue where keyboard navigation did not work on merged cells with hidden rows/columns. <a href="https://github.com/handsontable/handsontable/issues/6973" target="_blank">#6973</a></li>
+      <li>Fixed an issue where <code>trimRows</code> and <code>hiddenRows</code> with specific settings broke borders. <a href="https://github.com/handsontable/handsontable/issues/6904" target="_blank">#6904</a></li>
+      <li>Fixed wrong union type for <code>startPosition</code>. <a href="https://github.com/handsontable/handsontable/issues/6840" target="_blank">#6840</a></li>
+      <li>Fixed type mismatch for `Handsontable.plugins.ContextMenu`. <a href="https://github.com/handsontable/handsontable/issues/6347" target="_blank">#6347</a></li>
+      <li>Fixed an issue where <code>manualColumnMove</code> did not modify the <code>columns</code> in <code>updateSettings</code>. <a href="https://github.com/handsontable/handsontable/issues/5200" target="_blank">#5200</a></li>
+      <li>Fixed rendering issue on column udpate with <code>updateSettings</code>. <a href="https://github.com/handsontable/handsontable/issues/3770" target="_blank">#3770</a></li>
+      <li>Fixed an issue where expanding a collapsed column was also expanding  'child' collapsed columns, except the first child. <a href="https://github.com/handsontable/handsontable/issues/5792" target="_blank">#5792</a></li>
+      <li>Fixed an issue with inproper selection for headers when the first column was hidden. <a href="https://github.com/handsontable/handsontable/issues/5999" target="_blank">#5999</a></li>
+      <li>Fixed an issue where it was not possible to align cells if the selection was made upward. <a href="https://github.com/handsontable/handsontable/issues/6600" target="_blank">#6600</a></li>
+      <li>Fixed an issue where <code>currentColClassName</code> did not work properly with <code>nestedHeaders</code>. <a href="https://github.com/handsontable/handsontable/issues/5861" target="_blank">#5861</a></li>
+      <li>Fixed an issue with scrollbar and dimension calculation in Firefox for toggling column visibility with fixed columns and <code>stretchH</code>. <a href="https://github.com/handsontable/handsontable/issues/6186" target="_blank">#6186</a></li>
+      <li>Fixed an issue with undoing the nested row removal. <a href="https://github.com/handsontable/handsontable/issues/6433" target="_blank">#6433</a></li>
+      <li>Fixed an isse where <code>getSourceData</code> functions returned wrong data for nested rows. <a href="https://github.com/handsontable/handsontable/issues/5771" target="_blank">#5771</a></li>
+      <li>Fixed na issue where formulas plugin did not work with <code>nestedRows</code>. <a href="https://github.com/handsontable/handsontable/issues/4154" target="_blank">#4154</a></li>
+      <li>Fixed an issue where nested headers and hidden columns highlighted ad additional column when used together. <a href="https://github.com/handsontable/handsontable/issues/6881" target="_blank">#6881</a></li>
+      <li>Fixed an issue where <code>getByRange</code> for sourceData did not work properly with nested object data. <a href="https://github.com/handsontable/handsontable/issues/6548" target="_blank">#6548</a></li>
+      <li>Fixed an issue where `window.frameElement` threw errors in MSEdge, IE and Safari. <a href="https://github.com/handsontable/handsontable/issues/6478" target="_blank">#6478</a></li>
+      <li>Fixed an issue where `DataSource.countColumns` returned invalid number of columns for nested objects. <a href="https://github.com/handsontable/handsontable/issues/3958" target="_blank">#3958</a></li>
+      <li>Fixed an issue where <code>mergedCells</code> with hidden cells caused problems with rendering. <a href="https://github.com/handsontable/handsontable/issues/7020" target="_blank">#7020</a></li>
+      <li>Fixed an issue where it was not possible to move column when all columns were selected by `ctrl + a`. <a href="https://github.com/handsontable/handsontable/issues/6355" target="_blank">#6355</a></li>
+      <li>Fixed an issue where double click on the column resize handle did not adjust size correctly. <a href="https://github.com/handsontable/handsontable/issues/6755" target="_blank">#6755</a></li>
+      <li>Fixed an issue where the cell meta was retrieved using the wrong coordinates. <a href="https://github.com/handsontable/handsontable/issues/6703" target="_blank">#6703</a></li>
+      <li>Fixed nested rows incorrect state after changing data. <a href="https://github.com/handsontable/handsontable/issues/5753" target="_blank">#5753</a></li>
+      <li>Fixed an issue in EDGE where the dropdown menu <code>onMouseOut</code> event caused critical errors when hovering over vertical scrollbar. <a href="https://github.com/handsontable/handsontable/issues/6699" target="_blank">#6699</a></li>
+      <li>Fixed an issue with too many layers of highlight with noncontinuous selection on merged cells. <a href="https://github.com/handsontable/handsontable/issues/7028" target="_blank">#7028</a></li>
+      <li>Fixed an issue where <code>NestedHeaders</code> did not allow to define header level as an empty array. <a href="https://github.com/handsontable/handsontable/issues/7035" target="_blank">#7035</a></li>
+      <li>Fixed an issue where passing <code>nestedHeaders</code> as a single empty array stoped the table from rendering. <a href="https://github.com/handsontable/handsontable/issues/7036" target="_blank">#7036</a></li>
+      <li>Fixed an issue where opening a context menu for a column when its hidden data was selected did not block adding of rows by the menu. <a href="https://github.com/handsontable/handsontable/issues/7050" target="_blank">#7050</a></li>
+      <li>Fixed an issue where it was not possible to navigate past hidden column using keyboard if` hot.updateSettings` was called in <code>afterSelection</code>. <a href="https://github.com/handsontable/handsontable/issues/3726" target="_blank">#3726</a></li>
+      <li>Fixed an issue where headers did not export with <code>exportToFile</code> in the specific case. <a href="https://github.com/handsontable/handsontable/issues/4176" target="_blank">#4176</a></li>
+      <li>Fixed an issue with types mismatch. <a href="https://github.com/handsontable/handsontable/issues/6035" target="_blank">#6035</a></li>
+      <li>Fixed an issue where manual row resize handler threw an error when bottom rows overlay was enabled. <a href="https://github.com/handsontable/handsontable/issues/6435" target="_blank">#6435</a></li>
+      <li>Fixed an issue where the <code>afterRowResize</code> hook shared incorrect results in the second parameter. <a href="https://github.com/handsontable/handsontable/issues/6430" target="_blank">#6430</a></li>
+      <li>Fixed an issue where the row/column resize hooks should not have returned <code>null</code>. <a href="https://github.com/handsontable/handsontable/issues/7074" target="_blank">#7074</a></li>
+      <li>Fixed the loss of selection after merging from headers. <a href="https://github.com/handsontable/handsontable/issues/7076" target="_blank">#7076</a></li>
+      <li>Fixed an issue where calling <code>updateSettings</code> changed the index of frozen columns via <code>freezeColumn</code> method. <a href="https://github.com/handsontable/handsontable/issues/6843" target="_blank">#6843</a></li>
+      <li>Fixed an issue where deleting the last column via <code>updateSettings</code> which was part of the selection caused scroll to the bottom. <a href="https://github.com/handsontable/handsontable/issues/5849" target="_blank">#5849</a></li>
+      <li>Fixed an issue where it was not possible to hide rows and merge cells at the same time. <a href="https://github.com/handsontable/handsontable/issues/6224" target="_blank">#6224</a></li>
+      <li>Fixed the wrong data in merge cells after the hidden column and additionally an error occurs. <a href="https://github.com/handsontable/handsontable/issues/6888" target="_blank">#6888</a></li>
+      <li>Fixed an issue where it was not possible to change cell type via <code>setCellMeta</code>. <a href="https://github.com/handsontable/handsontable/issues/4793" target="_blank">#4793</a></li>
+      <li>Fixed an issue where cell editor did not dynamically changed while changing the cell type. <a href="https://github.com/handsontable/handsontable/issues/4360" target="_blank">#4360</a></li>
+      <li>Fixed an issue where it was not possible to unmerge cells if part of them was hidden. <a href="https://github.com/handsontable/handsontable/issues/7095" target="_blank">#7095</a></li>
+      <li>Fixed an issue where calling <code>clear</code> method removed the focus from the table. <a href="https://github.com/handsontable/handsontable/issues/7099" target="_blank">#7099</a></li>
+      <li>Fixed an issue where <code>clear</code> method did not work for hidden data. <a href="https://github.com/handsontable/handsontable/issues/7097" target="_blank">#7097</a></li>
+      <li>Fixed an issue where the editor was moved by 1px when the first row / column was hidden. <a href="https://github.com/handsontable/handsontable/issues/6982" target="_blank">#6982</a></li>
+      <li>Fixed an issue where headers were deselected after undoing removal. <a href="https://github.com/handsontable/handsontable/issues/6670" target="_blank">#6670</a></li>
+      <li>Fixed an issue with improper selection after insert column/row when mergeCells was enabled. <a href="https://github.com/handsontable/handsontable/issues/4897" target="_blank">#4897</a></li>
+      <li>Fixed an issue where wrong cell meta was removed when deleting rows. <a href="https://github.com/handsontable/handsontable/issues/6051" target="_blank">#6051</a></li>
+      <li>Fixed wrong types of <code>beforeRowMove</code> arguments. <a href="https://github.com/handsontable/handsontable/issues/6539" target="_blank">#6539</a></li>
+      <li>Fixed an issue where selection of a whole row did not happen consequently after selecting a row header. <a href="https://github.com/handsontable/handsontable/issues/5906" target="_blank">#5906</a></li>
+      <li>Fixed an issue where it was not possible to use physical row index instead of visual one. <a href="https://github.com/handsontable/handsontable/issues/6309" target="_blank">#6309</a></li>
+      <li>Fixed an issue where incorrect data was returned after undoing the remove column option. <a href="https://github.com/handsontable/handsontable/issues/5000" target="_blank">#5000</a></li>
+      <li>Fixed - Copy and paste works properly also when selecting hidden columns when: all columns within a selected range are hidden and when just some columns within a selected range are hidden. <a href="https://github.com/handsontable/handsontable/issues/7043" target="_blank">#7043</a>.</li>
+      <li>Fixed an issue where it was impossible to add new row in the <code>nestedRows</code>. <a href="https://github.com/handsontable/handsontable/issues/5133" target="_blank">#5133</a></li>
+      <li>Fixed an issue where <code>afterOnCellMouseDown</code> returned (0,0) coords after clicking on the topleft corner. <a href="https://github.com/handsontable/handsontable/issues/3978" target="_blank">#3978</a></li>
+      <li>Fixed an issue where persisted <code>manualColumnMove</code> was not restored when using <code>loadData</code>. <a href="https://github.com/handsontable/handsontable/issues/5207" target="_blank">#5207</a></li>
+      <li>Fixed issues with filtering results in blank rows. <a href="https://github.com/handsontable/handsontable/issues/5208" target="_blank">#5208</a></li>
+      <li>Fixed an issue where changing data on collapsed rows resulted in error. <a href="https://github.com/handsontable/handsontable/issues/5328" target="_blank">#5328</a></li>
+      <li>Fixed an issue where the <code>manualColumnMove</code> operation affected the column order of data loaded by <code>loadData</code>. <a href="https://github.com/handsontable/handsontable/issues/5591" target="_blank">#5591</a></li>
+      <li>Fixed an issue where <code>nestedRows</code> did not allow to keep <code>rowHeaders</code> after collapsing. <a href="https://github.com/handsontable/handsontable/issues/5874" target="_blank">#5874</a></li>
+      <li>Fixed performance and CPU issue caused by using some handsontable properties. <a href="https://github.com/handsontable/handsontable/issues/6058" target="_blank">#6058</a></li>
+      <li>Fixed an error with columnSummary plugin when trying to create a row. <a href="https://github.com/handsontable/handsontable/issues/6300" target="_blank">#6300</a></li>
+      <li>Fixed an error where `walkontable.css` and `handsontable.css` stylesheets were out of sync. <a href="https://github.com/handsontable/handsontable/issues/6381" target="_blank">#6381</a></li>
+      <li>Fixed an issue where <code>colHeaders</code> order was not updated after manual move with empty object data source. <a href="https://github.com/handsontable/handsontable/issues/6413" target="_blank">#6413</a></li>
+      <li>Fixed "detach from parent" option. <a href="https://github.com/handsontable/handsontable/issues/6432" target="_blank">#6432</a></li>
+      <li>Fixed an issue where <code>PreventOverflow</code> feature did not work if <code>multiColumnSorting</code> plugin was enabled. <a href="https://github.com/handsontable/handsontable/issues/6514" target="_blank">#6514</a></li>
+      <li>Fixed an issue where old CSS classes were not removed after <code>updateSettings</code>. <a href="https://github.com/handsontable/handsontable/issues/6575" target="_blank">#6575</a></li>
+      <li>Fixed an issue where <code>columnSummary</code>, <code>Filters</code> and spare rows were causing 'RangeError: Maximum call stack size exceeded'. <a href="https://github.com/handsontable/handsontable/issues/6695" target="_blank">#6695</a></li>
+      <li>Fixed an issue where <code>afterSelectionEnd</code> returned incorrect data when clicking on a column when all rows were hidden. <a href="https://github.com/handsontable/handsontable/issues/7045" target="_blank">#7045</a></li>
+      <li>Fixed an issue where wrapping was not applied after setting <code>trimWhitespace</code> to <code>false</code>. <a href="https://github.com/handsontable/handsontable/issues/6232" target="_blank">#6232</a></li>
+      <li>Fixed an issue with additional selection border in iOS. <a href="https://github.com/handsontable/handsontable/issues/7103" target="_blank">#7103</a></li>
+      <li>Fixed an issue with rendering different borders. <a href="https://github.com/handsontable/handsontable/issues/6955" target="_blank">#6955</a></li>
+      <li>Fixed an issue with <code>BACKSPACE</code> not working properly in the filter by value input. <a href="https://github.com/handsontable/handsontable/issues/6842" target="_blank">#6842</a></li>
+      <li>Fixed an issue with Undo/Redo not working with fixing columns. <a href="https://github.com/handsontable/handsontable/issues/6869" target="_blank">#6869</a></li>
+      <li>Added a missing argument in the <code>deepObjectSize</code> function. <a href="https://github.com/handsontable/handsontable/pull/6821" target="_blank">#6821</a></li>
+    </ul>
+  </div>
+
+  <div class="example-container clearfix">
     <h3>7.4.2</h3>
     <p>Released on 19th of February, 2020</p>
     <strong>Changes</strong>
