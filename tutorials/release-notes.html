@@ -67,7 +67,6 @@
     <ul>
       <li>The <code>observeChanges</code> plugin is no longer enabled by <code>columnSorting</code> and became deprecated. <a href="https://github.com/handsontable/handsontable/pull/5945" target="_blank">#5945</a></li>
       <li><code>HeaderTooltips</code> plugin becomes deprecated and will be removed in the next major version. <a href="https://github.com/handsontable/handsontable/issues/7023" target="_blank">#7023</a></li>
-      <li>Internet Explorer support is deprecated and will be removed by the end of the year. <a href="https://github.com/handsontable/handsontable/issues/7026" target="_blank">#7026</a></li>
     </ul>
     <strong>Changelog</strong>
     <ul>
@@ -296,6 +295,11 @@
       <li>Fixed an issue with <code>BACKSPACE</code> not working properly in the filter by value input. <a href="https://github.com/handsontable/handsontable/issues/6842" target="_blank">#6842</a></li>
       <li>Fixed an issue with Undo/Redo not working with fixing columns. <a href="https://github.com/handsontable/handsontable/issues/6869" target="_blank">#6869</a></li>
       <li>Added a missing argument in the <code>deepObjectSize</code> function. <a href="https://github.com/handsontable/handsontable/pull/6821" target="_blank">#6821</a></li>
+      <li>Fixed an issue where the table threw errors while clicking the cells if the Handsontable was initialized with <code>fixedRowsTop</code> and <code>fixedRowsBottom</code> higher than rows length. <a href="https://github.com/handsontable/handsontable/issues/6718" target="_blank">#6718</a></li>
+      <li>Fixed an issue where it was not possible to change the state of checkbox-type, non-contiguous cells using <code>SPACE</code>. <a href="https://github.com/handsontable/handsontable/issues/4882" target="_blank">#4882</a></li>
+      <li>Fixed an issue where resizing made rows shorter than expected and caused row misalignment. <a href="https://github.com/handsontable/handsontable/issues/6429" target="_blank">#6429</a></li>
+      <li>Fixed an issue where Handsontable was missing rows when <code>preventOverflow</code> with <code>updateSettings</code> were used. <a href="https://github.com/handsontable/handsontable/issues/4303" target="_blank">#4303</a></li>
+      <li>Fixed inconsistency between selecting all columns with <code>drag</code> and via a <code>CTRL/CMD + A</code> shortcut. <a href="https://github.com/handsontable/handsontable/issues/6327" target="_blank">#6327</a></li>
     </ul>
   </div>
 
