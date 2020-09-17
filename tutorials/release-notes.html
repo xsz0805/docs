@@ -57,6 +57,7 @@
       <li>Left mouse button (<code>LMB</code>) click on the top left corner will now select all cells along with their headers. <a href="https://github.com/handsontable/handsontable/pull/6547" target="_blank">#6547</a>.</li>
       <li>Removed the experimental <code>GanttChart</code> plugin. <a href="https://github.com/handsontable/handsontable/issues/7022" target="_blank">#7022</a>.</li>
       <li>Adding properties which were not defined on initialization or by <code>updateSettings</code> to the source data is possible only by the usage of <code>setSourceDataAtCell</code>. <a href="https://github.com/handsontable/handsontable/issues/6664" target="_blank">#6664</a>.</li>
+      <li>The <code>loadData</code> and <code>updateSettings</code> of <code>columns</code> property will now reset the state (sequence, width, height, etc.) of both rows and columns. It is assumed that a new dataset is introduced upon calling <code>updateSettings</code> or <code>loadData</code> <a href="https://github.com/handsontable/handsontable/pull/6547" target="_blank">#6547</a>.</li>
     </ul>
     <strong>New features</strong>
     <ul>
@@ -89,6 +90,7 @@
       <li>The <code>CellMeta</code> manager was refactored for future features and improvements. <a href="https://github.com/handsontable/handsontable/issues/6233" target="_blank">#6233</a></li>
       <li>Rows can be resized to less than <code>rowHeights</code>. <a href="https://github.com/handsontable/handsontable/issues/6149" target="_blank">#6149</a></li>
       <li>Left mouse button (LMB) click on the corner will now select all cells. <a href="https://github.com/handsontable/handsontable/pull/6547" target="_blank">#6547</a></li>
+      <li>The <code>loadData</code> and <code>updateSettings</code> of <code>columns</code> property will now reset the state (sequence, width, height, etc.) of both rows and columns. It is assumed that a new dataset is introduced upon calling <code>updateSettings</code> or <code>loadData</code> <a href="https://github.com/handsontable/handsontable/pull/6547" target="_blank">#6547</a>.</li>
       <li>The right mouse button (<code>RMB</code>) click on the corner, column and row headers will show just some options, defined by newly created specification <a href="https://github.com/handsontable/handsontable/pull/7082" target="_blank">#7082</a></li>
       <li>Hidden indexes will no longer be rendered, as a consequence <code>afterRenderer</code>, <code>modifyColWidth</code>, <code>beforeStretchingColumnWidth</code> will be executable only on visible (meaning, rendered) rows and columns. <a href="https://github.com/handsontable/handsontable/pull/6547" target="_blank">#6547</a></li>
       <li>The <code>getColWidth</code> for hidden index will return 0 - it used to return 0.1 <a href="https://github.com/handsontable/handsontable/pull/6547" target="_blank">#6547</a></li>
