@@ -1,6 +1,38 @@
 <div class="static-content">
 
   <div class="example-container clearfix">
+    <h3>8.1.0</h3>
+    <p>Released on 1th of October, 2020</p>
+    <strong>Added</strong>
+    <ul>
+      <li>Added support for resizing non-contiguous selected rows and columns. (<a href="https://github.com/handsontable/handsontable/issues/7162" target="_blank">#7162</a>)</li>
+      <li>Added e2e tests and reorganized already existing ones. (<a href="https://github.com/handsontable/handsontable/issues/6491" target="_blank">#6491</a>)</li>
+    </ul>
+    <strong>Changed</strong>
+    <ul>
+      <li>Updated dependencies to meet security requirements. (<a href="https://github.com/handsontable/handsontable/issues/7222" target="_blank">#7222</a>)</li>
+      <li>Improved performance for <code>TrimRows</code>, <code>HiddenRows</code> and <code>HiddenColumns</code> plugins for big datasets with many trimmed/hidden indexes. (<a href="https://github.com/handsontable/handsontable/issues/7223" target="_blank">#7223</a>)</li>
+    </ul>
+    <strong>Fixed</strong>
+    <ul>
+      <li>Fixed an issue where the value did not show if the first part of the merged area was hidden. (<a href="https://github.com/handsontable/handsontable/issues/6871" target="_blank">#6871</a>)</li>
+      <li>Fixed an issue where after selecting the top-left element, resizing the row range was not possible. (<a href="https://github.com/handsontable/handsontable/issues/7162" target="_blank">#7162</a>)</li>
+      <li>Fixed a bug introduced within (<a href="https://github.com/handsontable/handsontable/issues/6871" target="_blank">#6871</a>)</li>
+      <li>Fixed an issue where column headers were cut off after hiding and revealing the columns with the <code>HiddenColumns</code> plugin. (<a href="https://github.com/handsontable/handsontable/issues/6395" target="_blank">#6395</a>)</li>
+      <li>Fixed an issue where a redundant row was added during copy/paste operations in some cases. (<a href="https://github.com/handsontable/handsontable/issues/5961" target="_blank">#5961</a>)</li>
+      <li>Fixed an issue where too many values were pasted after a column was hidden. (<a href="https://github.com/handsontable/handsontable/issues/6743" target="_blank">#6743</a>)</li>
+      <li>Fixed a bug where an attempt to move collapsed parent rows, with the <code>NestedRows</code> plugin enabled, resulted in an error. (<a href="https://github.com/handsontable/handsontable/issues/7132" target="_blank">#7132</a>)</li>
+      <li>Fixed an issue where, after column or row alteration, Handsontable threw an error if <code>ColumnSummary</code> was enabled without defined row ranges. (<a href="https://github.com/handsontable/handsontable/issues/7174" target="_blank">#7174</a>)</li>
+      <li>Fixed an issue where using <code>updateSettings</code> was breaking column sorting in specific cases. (<a href="https://github.com/handsontable/handsontable/issues/7228" target="_blank">#7228</a>)</li>
+      <li>Fixed an issue where, if <code>fixedColumnsLeft</code> was defined, rows had their left borders missing after disabling the row headers using <code>updateSettings</code>. (<a href="https://github.com/handsontable/handsontable/issues/5735" target="_blank">#5735</a>)</li>
+      <li>Fixed an issue where the Handsontable instance could fall into an infinite loop during vertical scrolling. It only happened when the scrollable element was the <code>window</code> object. (<a href="https://github.com/handsontable/handsontable/issues/7260" target="_blank">#7260</a>)</li>
+      <li>Fixed an issue with moving rows to the last row of the table when the <code>NestedRows</code> plugin was enabled. Repaired some other minor moving-related bugs as well. (<a href="https://github.com/handsontable/handsontable/issues/6067" target="_blank">#6067</a>)</li>
+      <li>Fixed an issue with adding an unnecessary extra empty line in cells on Safari. (<a href="https://github.com/handsontable/handsontable/issues/7262" target="_blank">#7262</a>)</li>
+      <li>Fixed an issue with clipped column headers when they were changed before or within usage of <code>updateSettings</code>. (<a href="https://github.com/handsontable/handsontable/issues/6004" target="_blank">#6004</a>)</li>
+    </ul>
+  </div>
+
+  <div class="example-container clearfix">
     <h3>8.0.0</h3>
     <p>Released on 5th of August, 2020</p>
     <strong>Major changes</strong>
