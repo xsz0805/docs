@@ -146,32 +146,18 @@
           ]
         });
 
-        // original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-        function strip_tags(input, allowed) {
-          var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi,
-            commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
-
-          // making sure the allowed arg is a string containing only tags in lowercase (<a><b><c>)
-          allowed = (((allowed || "") + "").toLowerCase().match(/<[a-z][a-z0-9]*>/g) || []).join('');
-
-          return input.replace(commentsAndPhpTags, '').replace(tags, function ($0, $1) {
-            return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
+        function safeHtmlRenderer(instance, td, row, col, prop, value, cellProperties) {
+          // be sure you only allow certain HTML tags to avoid XSS threats (you should also remove unwanted HTML attributes)
+          td.innerHTML = Handsontable.helper.sanitize(value, {
+            ALLOWED_TAGS: ['em', 'b', 'strong', 'a', 'big'],
           });
         }
 
-        function safeHtmlRenderer(instance, td, row, col, prop, value, cellProperties) {
-          var escaped = Handsontable.helper.stringify(value);
-          escaped = strip_tags(escaped, '<em><b><strong><a><big>'); //be sure you only allow certain HTML tags to avoid XSS threats (you should also remove unwanted HTML attributes)
-          td.innerHTML = escaped;
+        function coverRenderer(instance, td, row, col, prop, value, cellProperties) {
+          var stringifiedValue = Handsontable.helper.stringify(value);
+          var img;
 
-          return td;
-        }
-
-        function coverRenderer (instance, td, row, col, prop, value, cellProperties) {
-          var escaped = Handsontable.helper.stringify(value),
-            img;
-
-          if (escaped.indexOf('http') === 0) {
+          if (stringifiedValue.indexOf('http') === 0) {
             img = document.createElement('IMG');
             img.src = value;
 
@@ -181,13 +167,10 @@
 
             Handsontable.dom.empty(td);
             td.appendChild(img);
-          }
-          else {
+          } else {
             // render as text
             Handsontable.renderers.TextRenderer.apply(this, arguments);
           }
-
-          return td;
         }</script>
     </div>
   </div>
@@ -252,8 +235,6 @@
           else {
             td.style.backgroundColor = 'white';
           }
-
-          return td;
         }
 
         Handsontable.dom.addEvent(container2, 'mousedown', function (event) {
