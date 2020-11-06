@@ -69,6 +69,7 @@
           <li>Hidden indexes aren’t rendered. As a consequence hooks <code>beforeValueRender</code>, <code>beforeRenderer</code>, <code>afterRenderer</code>, <code>modifyColWidth</code>, <code>beforeStretchingColumnWidth</code> etc. will be executed just for some of the columns (just the rendered ones).</li>
           <li>The <code>getColWidth</code> for hidden index will return 0 – it used to return 0.1. Also, it will no longer be called internally, the need can be now achieved by managers of rows and columns.</li>
           <li>The <code>modifyColWidth</code> hook will not be called internally. However, it will be executed when the user will call the <code>getColWidth</code>.</li>
+          <li>Hidden indexes aren't rendered. As a consequence hooks <code>beforeValueRender</code>, <code>beforeRenderer</code>, <code>afterRenderer</code>, <code>modifyColWidth</code>, <code>beforeStretchingColumnWidth</code> etc. will be executed just for some of the columns (just the rendered ones).</li>
           <li><code>listen</code> function from the core API used to accept <code>modifyDocumentFocus</code> as optional parameter, this parameter was removed.</li>
           <li><code>CustomBorders</code> plugin was adapted to work with <code>HiddenColumns</code> properly. From now on hiding cells at the start or the end of the range will also hide their borders. Hiding a single cell with borders will hide all of its borders. <a href="https://github.com/handsontable/handsontable/pull/7083" target="_blank">#7083</a>.</li>
           <li><code>CollapsibleColumns</code> will no longer use <code>HiddenColumns</code> plugin to work. <a href="https://github.com/handsontable/handsontable/issues/6204" target="_blank">#6204</a>.</li>
@@ -82,7 +83,6 @@
           <li>Adjusted <code>HiddenRows</code> to new <code>IndexMapper</code> architecture. <a href="https://github.com/handsontable/handsontable/issues/6177" target="_blank">#6177</a>.</li>
         </ul>
       </li>
-      <li>Selection behavior changed when hiding cells from the <code>ContextMenu</code>. Now it selects a column on the right when there is space on right up to the last selected column. Selecting a column on the left works the same as in the case of right selection. <a href="https://github.com/handsontable/handsontable/issues/6874" target="_blank">#6874</a>.</li>
       <li>Developed a unified way to identify HOT "input" elements. All input elements owned by HOT got an attribute "data-hot-input" which are identified by that key. <a href="https://github.com/handsontable/handsontable/issues/6383" target="_blank">#6383</a>.</li>
       <li><code>NestedHeaders</code> plugin was rewritten, from now on, only a tree-like structure will be allowed, meaning, there will be no possibility to place nested headers in-between layers. <a href="https://github.com/handsontable/handsontable/pull/6716" target="_blank">#6716</a></li>
       <li>The right mouse button (<code>RMB</code>) click on the corner when there is no data will show all options disabled. <a href="https://github.com/handsontable/handsontable/pull/6547" target="_blank">#6547</a>.</li>
@@ -101,6 +101,7 @@
     <ul>
       <li>The <code>observeChanges</code> plugin is no longer enabled by <code>columnSorting</code> and became deprecated. <a href="https://github.com/handsontable/handsontable/pull/5945" target="_blank">#5945</a></li>
       <li><code>HeaderTooltips</code> plugin becomes deprecated and will be removed in the next major version. <a href="https://github.com/handsontable/handsontable/issues/7023" target="_blank">#7023</a></li>
+      <li>IE support is deprecated and will be removed by the end of the year. <a href="https://github.com/handsontable/handsontable/issues/7026" target="_blank">#7026</a></li>
     </ul>
     <strong>Changelog</strong>
     <ul>
