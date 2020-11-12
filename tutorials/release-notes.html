@@ -1,6 +1,29 @@
 <div class="static-content">
 
   <div class="example-container clearfix">
+    <h3>8.2.0</h3>
+    <p>Released on 12th of November, 2020</p>
+    <strong>Added</strong>
+    <ul>
+      <li>Added a new type of an Index Map named <code>LinkedPhysicalIndexToValueMap</code>. (<a href="https://github.com/handsontable/handsontable/issues/7276" target="_blank">#7276</a>)</li>
+      <li>Added an external dependency, <code>DOMPurify</code>, to add HTML sanitization that should minimize the risk of inserting insecure code using Handsontable built-in functionalities. (<a href="https://github.com/handsontable/handsontable/issues/7292" target="_blank">#7292</a>)</li>
+    </ul>
+    <strong>Fixed</strong>
+    <ul>
+      <li>Fixed an issue where the container was not updated after trimming rows. (<a href="https://github.com/handsontable/handsontable/issues/7241" target="_blank">#7241</a>)</li>
+      <li>Fixed an issue where the <code>htmlToGridSettings</code> helper threw an error if a  <code><table></code> with no rows was passed. (<a href="https://github.com/handsontable/handsontable/issues/7311" target="_blank">#7311</a>)</li>
+      <li>Fixed an issue where the sorting indicator moved incorrectly when a column was added. (<a href="https://github.com/handsontable/handsontable/issues/6397" target="_blank">#6397</a>)</li>
+      <li>Fixed an issue where untrimming previously trimmed rows would sometimes result in the table instance not refreshing its height, leaving the row headers improperly rendered. (<a href="https://github.com/handsontable/handsontable/issues/6276" target="_blank">#6276</a>)</li>
+      <li>Fixed an issue where the hidden columns plugin caused unintended scrolling when some cells were hidden. (<a href="https://github.com/handsontable/handsontable/issues/7322" target="_blank">#7322</a>)</li>
+      <li>Fixed an issue where an error was thrown while hovering over row/column headers. (<a href="https://github.com/handsontable/handsontable/issues/6926" target="_blank">#6926</a>)</li>
+      <li>Fixed an issue where table validation caused incorrect data rendering if the hidden rows/column plugin was enabled. (<a href="https://github.com/handsontable/handsontable/issues/7301" target="_blank">#7301</a>)</li>
+      <li>Fixed an issue where adding 0 rows to the table ended with doubled entries in index mappers' collections. (<a href="https://github.com/handsontable/handsontable/issues/7326" target="_blank">#7326</a>)</li>
+      <li>Fixed a problem with the inconsistent behavior of the Context Menu's "Clear column" disabled status. (<a href="https://github.com/handsontable/handsontable/issues/7003" target="_blank">#7003</a>)</li>
+      <li>Fixed an issue with parsing multiline cells on pasting <code>text/html</code> mime-type. (<a href="https://github.com/handsontable/handsontable/issues/7369" target="_blank">#7369</a>)</li>
+    </ul>
+  </div>
+
+  <div class="example-container clearfix">
     <h3>8.1.0</h3>
     <p>Released on 1st of October, 2020</p>
     <strong>Added</strong>
