@@ -76,6 +76,9 @@
           "cell-function": {
             "title": "Cell function"
           },
+          "suspend-rendering": {
+            "title": "Suspend rendering"
+          },
           "testing": {
             "title": "Testing"
           },
