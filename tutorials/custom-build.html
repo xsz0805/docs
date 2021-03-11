@@ -3,24 +3,21 @@
   <div class="index-list">
 
     <ul>
-      <li><a href="#prerequisites">Prerequisites</a></li>
-      <li><a href="#structure">Monorepo structure</a></li>
       <li><a href="#page-tasks">NPM tasks</a></li>
       <li><a href="#page-tasks-wrappers">NPM tasks for the wrappers</a></li>
       <li><a href="#dependencies">Dependency management</a></li>
-      <li><a href="#known-issues">Known issues</a></li>
       <li><a href="#page-running">Running your first build</a></li>
     </ul>
   </div>
 
   <div class="example-container clearfix" name="building">
-    <p>From version <code>8.4.0</code> onward, the <code>handsontable</code> repository is configured as a monorepo,
+    <p>From version <code>8.3.2</code> onward, the <code>handsontable</code> repository is configured as a monorepo,
     and consist of four packages:</p>
     <ol>
       <li><code>handsontable</code> (stored at <code>.</code> - the root directory)</li>
-      <li><code>@handsontable/angular</code> (stored at <code>./wrappers/angular-handsontable</code></li>
-      <li><code>@handsontable/react</code> (stored at <code>./wrappers/react-handsontable</code></li>
-      <li><code>@handsontable/vue</code> (stored at <code>./wrappers/vue-handsontable</code></li>
+      <li><code>@handsontable/angular</code> (stored at <code>./wrappers/angular)</code></li>
+      <li><code>@handsontable/react</code> (stored at <code>./wrappers/react)</code></li>
+      <li><code>@handsontable/vue</code> (stored at <code>./wrappers/vue)</code></li>
     </ol>
     <p>Although the packages are versioned with the same number and are released together, they all have their own
       build and testing processes.</p>
@@ -47,7 +44,7 @@
       <li><code>./dist/handsontable.full.min.css</code></li>
       <li><code>./dist/languages/*</code></li>
     </ul>
-    <p>as well as <code>es</code>, and <code>commonjs</code> builds. More info about dist packages can be found <a
+    <p>More info about dist packages can be found <a
             href="https://github.com/handsontable/handsontable/blob/master/dist/README.md" target="_blank">here</a>.
       It is advised that you never modify the above-mentioned files but rather make changes in the <code>src/</code>
       directory and then run a proper build. This is especially important if you want to contribute
@@ -96,14 +93,12 @@
     <p>Or by utilizing one of the helper scripts in the root directory:</p>
     <ul>
       <li><code>npm run in</code> - Runs a command for the specified project. For Example:<br>
-        <code>npm run in angular-handsontable build</code> - runs the <code>build</code> command for the
+        <code>npm run in angular build</code> - runs the <code>build</code> command for the
         <code>@handsontable/angular</code> project.<br>
-        Shorthands are also available - the aforementioned command works as <code>npm run in angular build</code> as
-        well.
       </li>
       <li><code>npm run all</code> - Runs a command for all the packages. For example: <br>
         <code>npm run all build</code> will run the <code>build</code> command for all the defined packages.<br>
-        The order in which the packages are executed is defined in the <code>./scripts/run-all.js</code> script.
+        The order in which the packages are executed is defined in the <code>./scripts/run-all.mjs</code> script.
       </li>
     </ul>
   </div>
@@ -113,7 +108,7 @@
     <p>To run your own build, follow the below steps:</p>
     <ol>
       <li>Install Node.js (available for Windows, Mac and Linux). This will also install NPM (Node Package Manager) that
-        handles all the dependencies. Handsontable requires <strong>Node.js >=10</strong> and <strong>npm >=6</strong> for building and testing.
+        handles all the dependencies. Handsontable requires <strong>Node.js >=15.11.0</strong> and <strong>npm >=7.1.1</strong> for building and testing.
       </li>
       <li>Clone the Handsontable repository on your local disk and go to the directory where you cloned it.</li>
       <li>Run <code>npm install</code> to download all the dependencies defined in <code>package.json</code>. The
