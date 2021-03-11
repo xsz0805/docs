@@ -1,6 +1,38 @@
 <div class="static-content">
 
   <div class="example-container clearfix">
+    <h3>8.3.2</h3>
+    <p>Released on 16th of March, 2021</p>
+    <strong>Added</strong>
+    <ul>
+      <li>Introduced the monorepo to this repository. From now on, <code>handsontable</code>,
+        <code>@handsontable/angular</code>, <code>@handsontable/react</code>, and <code>@handsontable/vue</code>
+        will all be developed in the same repo - <code>handsontable</code>. (<a href="https://github.com/handsontable/handsontable/issues/7380" target="_blank">#7380</a>)</li>
+      <li>Added a custom ESLint rule which allows restricting specified modules from loading
+        by <code>import</code> or re-exporting. (<a href="https://github.com/handsontable/handsontable/issues/7473" target="_blank">#7473</a>)</li>
+    </ul>
+    <strong>Fixed</strong>
+    <ul>
+      <li>Fixed a bug where it was impossible to enable <code>disableVisualSelection</code> for cells/columns. (<a href="https://github.com/handsontable/handsontable/issues/5082" target="_blank">#5082</a>)</li>
+      <li>Fixed wrong paddings for multi-level headers. (<a href="https://github.com/handsontable/handsontable/issues/5086" target="_blank">#5086</a>)</li>
+      <li>Fixed problems with the <code>current</code> option of the <code>disableVisualSelection</code> setting. (<a href="https://github.com/handsontable/handsontable/issues/5869" target="_blank">#5869</a>)</li>
+      <li>Fixed problems with the <code>header</code> option of the <code>disableVisualSelection</code> setting. (<a href="https://github.com/handsontable/handsontable/issues/6025" target="_blank">#6025</a>)</li>
+      <li>Fixed a bug where the "double-tap-to-zoom" gesture prevented the editor from opening properly on some mobile devices. (<a href="https://github.com/handsontable/handsontable/issues/7142" target="_blank">#7142</a>)</li>
+      <li>Fixed a bug where calling the <code>updateSettings</code> method in the body of some callbacks would break the table. (<a href="https://github.com/handsontable/handsontable/issues/7231" target="_blank">#7231</a>)</li>
+      <li>Fixed an issue where the <code>maxRows</code> and <code>maxCols</code> options interfered with hidden index calculations. (<a href="https://github.com/handsontable/handsontable/issues/7350" target="_blank">#7350</a>)</li>
+      <li>Fixed problems with doubled borders being displayed when <code>window</code> was a scrollable container. (<a href="https://github.com/handsontable/handsontable/issues/7356" target="_blank">#7356</a>)</li>
+      <li>Fixed a bug where value population from an edited cell would result in a console error. (<a href="https://github.com/handsontable/handsontable/issues/7382" target="_blank">#7382</a>)</li>
+      <li>Fixed a bug where the dropdown cell type would not work on Safari 14+. (<a href="https://github.com/handsontable/handsontable/issues/7413" target="_blank">#7413</a>)</li>
+      <li>Fixed a bug where the <code>AutoRowSize</code> plugin would break the table when placed in an iframe. (<a href="https://github.com/handsontable/handsontable/issues/7424" target="_blank">#7424</a>)</li>
+      <li>Fixed bugs in navigation by <code>HOME</code> and <code>END</code> keys with hidden rows/columns enabled. (<a href="https://github.com/handsontable/handsontable/issues/7454" target="_blank">#7454</a>)</li>
+      <li>Fixed a bug with the <code>trimWhitespace</code> option not working properly. (<a href="https://github.com/handsontable/handsontable/issues/7458" target="_blank">#7458</a>)</li>
+      <li>Fixed an issue with inconsistent documentation and TypeScript definitions for <code>colWidths</code> and <code>rowHeights</code> options. (<a href="https://github.com/handsontable/handsontable/issues/7507" target="_blank">#7507</a>)</li>
+      <li>Fixed the incorrect <code>cellTypes</code> module paths in the <code>exports</code> entry of the <code>package.json</code> file. (<a href="https://github.com/handsontable/handsontable/issues/7597" target="_blank">#7597</a>)</li>
+      <li><i>Vue:</i> Fixed Remote Code Execution vulnerability in the dev dependencies. (<a href="https://github.com/handsontable/handsontable/issues/7620" target="_blank">#7620</a>)</li>
+    </ul>
+  </div>
+
+  <div class="example-container clearfix">
     <h3>8.3.1</h3>
     <p>Released on 10th of February, 2021</p>
     <strong>Fixed</strong>
