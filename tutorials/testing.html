@@ -47,6 +47,8 @@
       The wrappers contain their own framework-specific testing environments. You can either run the <code>npm
       run test</code> script inside of the wrapper directory, or utilize the <code>npm run in</code>/<code>npm
       run all</code> scripts to run the tests from the root.
+      <p class="notification info">Keep in mind that running wrapper tests require building the Handsontable (
+        <code>npm run build</code>). Once built the wrapper can consume its main dependency. Otherwise, tests will fail.</p>
     </p>
   </div>
   <div class="example-container clearfix">
