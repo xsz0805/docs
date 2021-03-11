@@ -5,6 +5,7 @@
     <ul>
       <li><a href="#testing-in-browser">Testing in browser</a></li>
       <li><a href="#testing-with-npm-cli">Testing with NPM (CLI)</a></li>
+      <li><a href="#testing-the-wrappers">Testing the framework-specific wrappers.</a></li>
     </ul>
   </div>
 
@@ -41,6 +42,14 @@
     </ul>
   </div>
   <div class="example-container clearfix">
+    <h3 id="testing-the-wrappers">Testing the framework-specific wrappers.</h3>
+    <p>
+      The wrappers contain their own framework-specific testing environments. You can either run the <code>npm
+      run test</code> script inside of the wrapper directory, or utilize the <code>npm run in</code>/<code>npm
+      run all</code> scripts to run the tests from the root.
+    </p>
+  </div>
+  <div class="example-container clearfix">
       <h3 id="environments-settings">Environments settings</h3>
       <ul>
         <li>Due to Puppeteers <code>setViewer</code> settings, the size of the window's browser should be at least 1280px wide and 720px tall.</li>
@@ -48,7 +57,7 @@
         <li>The browser window running the test should be on top. Some tests will not pass while running in the background.</li>
         <li>Focus should be on the browser window and the mouse should be still. Moving the mouse or losing focus on the window can interfere with the tests, causing them not to pass.</li>
       </ul>
-      </div> 
+      </div>
   <p class="gap-top-xsmall">
     <a href="https://github.com/handsontable/docs/edit/<?js= version ?>/tutorials/testing.html" class="edit-doc" target="_blank">
       Edit this page

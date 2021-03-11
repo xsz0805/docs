@@ -3,16 +3,41 @@
   <div class="index-list">
 
     <ul>
+      <li><a href="#prerequisites">Prerequisites</a></li>
+      <li><a href="#structure">Monorepo structure</a></li>
       <li><a href="#page-tasks">NPM tasks</a></li>
+      <li><a href="#page-tasks-wrappers">NPM tasks for the wrappers</a></li>
+      <li><a href="#dependencies">Dependency management</a></li>
+      <li><a href="#known-issues">Known issues</a></li>
       <li><a href="#page-running">Running your first build</a></li>
     </ul>
   </div>
 
   <div class="example-container clearfix" name="building">
-    <p>The build process is using <a href="https://webpack.js.org/" target="_blank">Webpack</a>, <a href="https://babeljs.io/" target="_blank">Babel</a> and
+    <p>From version <code>8.4.0</code> onward, the <code>handsontable</code> repository is configured as a monorepo,
+    and consist of four packages:</p>
+    <ol>
+      <li><code>handsontable</code> (stored at <code>.</code> - the root directory)</li>
+      <li><code>@handsontable/angular</code> (stored at <code>./wrappers/angular-handsontable</code></li>
+      <li><code>@handsontable/react</code> (stored at <code>./wrappers/react-handsontable</code></li>
+      <li><code>@handsontable/vue</code> (stored at <code>./wrappers/vue-handsontable</code></li>
+    </ol>
+    <p>Although the packages are versioned with the same number and are released together, they all have their own
+      build and testing processes.</p>
+
+    <p class="notification info">We're using <a href="https://docs.npmjs.com/cli/v7/using-npm/workspaces" target="_blank" rel="nofollow">npm
+      workspaces</a> (introduced in <code>npm@7</code>) to manage the monorepo.<br>
+      Because of some crucial bugfixes in the later versions, the Handsontable monorepo requires using
+      <strong><code>npm@7.1.1+</code></strong>.</p>
+
+    <p>The build process for <code>handsontable</code> is using <a href="https://webpack.js.org/"
+                                                                   target="_blank">Webpack
+    </a>, <a
+            href="https://babeljs.io/" target="_blank">Babel</a> and
       as well as npm tasks listed in
       <a href="https://github.com/handsontable/handsontable/blob/master/package.json" target="_blank">package.json</a>.
-    During this process, the source located in the <code>src/*</code> directory are transformed into the output files:</p>
+    During this process, the source files located in the <code>src/*</code> directory are transformed into the output
+      files:</p>
     <ul>
       <li><code>./dist/handsontable.js</code></li>
       <li><code>./dist/handsontable.css</code></li>
@@ -22,7 +47,8 @@
       <li><code>./dist/handsontable.full.min.css</code></li>
       <li><code>./dist/languages/*</code></li>
     </ul>
-    <p>More info about dist packages can be found <a href="https://github.com/handsontable/handsontable/blob/master/dist/README.md" target="_blank">here</a>.
+    <p>as well as <code>es</code>, and <code>commonjs</code> builds. More info about dist packages can be found <a
+            href="https://github.com/handsontable/handsontable/blob/master/dist/README.md" target="_blank">here</a>.
       It is advised that you never modify the above-mentioned files but rather make changes in the <code>src/</code>
       directory and then run a proper build. This is especially important if you want to contribute
       your changes back to Handsontable by making a pull request.</p>
@@ -58,6 +84,30 @@
       <li><code>npm run watch</code> - watches for changes in source directory and runs a build when a change is observed. For faster rebuild when a change is observed, the watcher triggers the file-building task without minify.</li>
     </ul>
   </div>
+
+  <div class="example-container clearfix" name="tasks">
+    <h3 id="page-tasks-wrappers">NPM tasks for the framework-specific wrappers.</h3>
+    <p>Each of the wrappers has it's own framework-specific build environment and scripts. The build process can be
+      triggered by either navigating the the wrapper directory (e.g. <code>./wrappers/react-handsontable/</code> and
+    running:</p>
+    <ul>
+      <li><code>npm run build</code></li>
+    </ul>
+    <p>Or by utilizing one of the helper scripts in the root directory:</p>
+    <ul>
+      <li><code>npm run in</code> - Runs a command for the specified project. For Example:<br>
+        <code>npm run in angular-handsontable build</code> - runs the <code>build</code> command for the
+        <code>@handsontable/angular</code> project.<br>
+        Shorthands are also available - the aforementioned command works as <code>npm run in angular build</code> as
+        well.
+      </li>
+      <li><code>npm run all</code> - Runs a command for all the packages. For example: <br>
+        <code>npm run all build</code> will run the <code>build</code> command for all the defined packages.<br>
+        The order in which the packages are executed is defined in the <code>./scripts/run-all.js</code> script.
+      </li>
+    </ul>
+  </div>
+
   <div class="example-container clearfix" name="running">
     <h3 id="page-running">Running your first build</h3>
     <p>To run your own build, follow the below steps:</p>
