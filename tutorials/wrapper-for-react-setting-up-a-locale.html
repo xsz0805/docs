@@ -83,7 +83,12 @@
           render() {
             return (
               <HotTable settings={this.state.hotSettings}>
-                <HotColumn data="productName" type="text" width="120" />
+                <HotColumn
+                  data="productName"
+                  type="text"
+                  width="120"
+                  readOnly="true"
+                />
                 <HotColumn
                   data="JP_price"
                   type="numeric"

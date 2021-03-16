@@ -1,4 +1,5 @@
 <div class="static-content">
+  <script src="/docs/<?js= version ?>/components/numbro/dist/languages.min.js" data-jsfiddle="common"></script>
   <div class="example-container clearfix">
     <h3>
       <p>
@@ -6,17 +7,18 @@
       </p>
     </h3>
     <div>
-      <div id="example1">
+      <div id="example1" class="hot">
         <hot-table :data="hotData">
           <hot-column
             title="Product name"
             data="productName"
             width="120"
+            read-only="true"
           ></hot-column>
           <hot-column
             title="Price in Japan"
             type="numeric"
-            :numericFormat="formatJP"
+            :numeric-format="formatJP"
             data="JP_price"
             width="120"
           ></hot-column>
@@ -24,24 +26,25 @@
             title="Price in Turkey"
             data="TR_price"
             type="numeric"
-            :numericFormat="formatTR"
+            :numeric-format="formatTR"
             width="120"
           ></hot-column>
         </hot-table>
       </div>
     </div>
-    <script type="text/x-hot-html" data-jsfiddle="example1">
-      <div id="example1">
+    <div class="codeLayout">
+      <script type="text/x-hot-html" data-jsfiddle="example1">
         <hot-table :data="hotData">
           <hot-column
             title="Product name"
             data="productName"
             width="120"
+            read-only="true"
           ></hot-column>
           <hot-column
             title="Price in Japan"
             type="numeric"
-            :numericFormat="formatJP"
+            :numeric-format="formatJP"
             data="JP_price"
             width="120"
           ></hot-column>
@@ -49,17 +52,10 @@
             title="Price in Turkey"
             data="TR_price"
             type="numeric"
-            :numericFormat="formatTR"
+            :numeric-format="formatTR"
             width="120"
           ></hot-column>
         </hot-table>
-      </div>
-    </script>
-    <div class="codeLayout">
-      <script type="text/html">
-        <div id="example1" class="hot">
-          <hot-table :settings="hotSettings"></hot-table>
-        </div>
       </script>
     </div>
     <p>An implementation of the <code>@handsontable/vue</code> component. JS file:</p>
@@ -117,10 +113,10 @@
             ],
           };
         },
-      components: {
-        HotTable,
-        HotColumn,
-      },
+        components: {
+          HotTable,
+          HotColumn,
+        },
       });</script>
     </div>
   </div>
