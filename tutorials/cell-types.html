@@ -282,17 +282,17 @@
       });
     </script>
 
-    <p>Empty cells may be treated in a special way, for example, the <a href="/docs/<?js= version ?>/demo-sorting.html">ColumnSorting</a> plugin
-      has <code>sortEmptyCells</code> option which is responsible for establishing whether empty cells should be sorted like non-empty cells.
+    <p>Empty cells may be treated in differently in different contexts, for example, the <a href="/docs/<?js= version ?>/demo-sorting.html">ColumnSorting</a> plugin
+      has a <code>sortEmptyCells</code> option responsible for establishing whether empty cells should be sorted like non-empty cells.
     </p>
 
     <p>
-      <strong>Note:</strong> Please keep in mind that opening of cell with <code>undefined</code> and <code>null</code>
-      values results in <strong>overwriting</strong> the original value by the empty string.
+      <strong>Note:</strong> Please keep in mind that opening a cell with <code>undefined</code> and <code>null</code>
+      values results in <strong>overwriting</strong> the original value with an empty string.
     </p>
     <p>
-      <strong>Note:</strong> Please keep in mind that copying <code>undefined</code> and <code>null</code>
-      values results in pasting the empty string.
+      <strong>Note:</strong> Please keep in mind that copying and pasting <code>undefined</code> and <code>null</code>
+      values will result in pasting the empty string.
     </p>
 
   <p class="gap-top-xsmall">
