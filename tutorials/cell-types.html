@@ -1,4 +1,5 @@
 <div class="static-content">
+  <script src="/docs/<?js= version ?>/components/numbro/dist/languages.min.js" data-jsfiddle="common"></script>
 
   <div class="index-list">
 
@@ -256,15 +257,16 @@
       var container = document.getElementById('example2');
       var hot = new Handsontable(container, {
         data: [
-          ['', '', '', '', '', 'empty string'],
-          [null, null, null, null, null, 'null'],
-          [undefined, undefined, undefined, undefined, undefined, 'undefined'],
-          ['non-empty text', 13000, true, 'orange', 'password', 'non-empty value'],
+          ['empty string', '', '', '', '', ''],
+          ['null', null, null, null, null, null],
+          ['undefined', undefined, undefined, undefined, undefined, undefined],
+          ['non-empty value', 'non-empty text', 13000, true, 'orange', 'password'],
         ],
         columnSorting: {
           sortEmptyCells: true
         },
         columns: [
+          {},
           {},
           {
             type: 'numeric',
@@ -276,9 +278,8 @@
           { type: 'checkbox' },
           { type: 'dropdown', source: ['yellow', 'red', 'orange'] },
           { type: 'password' },
-          {},
         ],
-        colHeaders: ['type:text', 'type:numeric', 'type:checkbox', 'type:dropdown', 'type:password', 'extra info'],
+        colHeaders: ['value<br>underneath', 'type:text', 'type:numeric', 'type:checkbox', 'type:dropdown', 'type:password'],
       });
     </script>
 
