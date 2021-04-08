@@ -237,8 +237,8 @@
   <div class="example-container clearfix" name="preview">
     <h3 id="empty-cells">Empty cells</h3>
     <p>Its worth to mention that values such as <code>''</code> (empty string), <code>null</code> and <code>undefined</code>
-      are considered as empty values. You can use prepared <code>Handsontable.helper.isEmpty</code> method to check
-      whether some value is considered as empty. Cells with empty values are displayed in a similar way for most of data types
+      are considered empty values. You can use the <code>Handsontable.helper.isEmpty</code> method to check
+      whether a value is considered empty. Cells with empty values are displayed in a similar way for most of the data types
       (see below).
     </p>
 
@@ -283,17 +283,17 @@
       });
     </script>
 
-    <p>Empty cells may be treated in a special way, for example, the <a href="/docs/<?js= version ?>/demo-sorting.html">ColumnSorting</a> plugin
-      has <code>sortEmptyCells</code> option which is responsible for establishing whether empty cells should be sorted like non-empty cells.
+    <p>Empty cells may be treated in differently in different contexts, for example, the <a href="/docs/<?js= version ?>/demo-sorting.html">ColumnSorting</a> plugin
+      has a <code>sortEmptyCells</code> option responsible for establishing whether empty cells should be sorted like non-empty cells.
     </p>
 
     <p>
-      <strong>Note:</strong> Please keep in mind that opening of cell with <code>undefined</code> and <code>null</code>
-      values results in <strong>overwriting</strong> the original value by the empty string.
+      <strong>Note:</strong> Please keep in mind that opening a cell with <code>undefined</code> and <code>null</code>
+      values results in <strong>overwriting</strong> the original value with an empty string.
     </p>
     <p>
-      <strong>Note:</strong> Please keep in mind that copying <code>undefined</code> and <code>null</code>
-      values results in pasting the empty string.
+      <strong>Note:</strong> Please keep in mind that copying and pasting <code>undefined</code> and <code>null</code>
+      values will result in pasting the empty string.
     </p>
 
   <p class="gap-top-xsmall">
