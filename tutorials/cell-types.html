@@ -246,42 +246,58 @@
       <div id="example2" class="hot"></div>
     </div>
 
-    <script data-jsfiddle="example2">
-      var data = [
-        ['', 'Ford', 'Tesla', 'Toyota', 'Honda'],
-        ['2017', 10, 11, 12, 13],
-        ['2018', 20, 11, 14, 13],
-        ['2019', 30, 15, 12, 13]
-      ];
-
-      var container = document.getElementById('example2');
-      var hot = new Handsontable(container, {
-        data: [
-          ['empty string', '', '', '', '', ''],
-          ['null', null, null, null, null, null],
-          ['undefined', undefined, undefined, undefined, undefined, undefined],
-          ['non-empty value', 'non-empty text', 13000, true, 'orange', 'password'],
-        ],
-        columnSorting: {
-          sortEmptyCells: true
-        },
-        columns: [
-          {},
-          {},
-          {
-            type: 'numeric',
-            numericFormat: {
-              pattern: '$0,0.00',
-              culture: 'en-US' // this is the default culture, set up for USD
-            },
+    <div class="codeLayout">
+      <div class="buttons">
+        <button class="jsFiddleLink" data-runfiddle="example1">
+          <i class="fa fa-jsfiddle"></i>
+          Edit
+        </button>
+        <button class="dump" name="dump" data-dump="#example1" data-instance="hot"
+                title="Print current data source to console">
+          <i class="fa fa-terminal"></i>
+          Log to console
+        </button>
+      </div>
+      <script data-jsfiddle="example2">
+        var container = document.getElementById('example2');
+        var hot = new Handsontable(container, {
+          data: [
+            ['empty string', '', '', '', '', ''],
+            ['null', null, null, null, null, null],
+            ['undefined', undefined, undefined, undefined, undefined, undefined],
+            ['non-empty value', 'non-empty text', 13000, true, 'orange', 'password'],
+          ],
+          columnSorting: {
+            sortEmptyCells: true
           },
-          { type: 'checkbox' },
-          { type: 'dropdown', source: ['yellow', 'red', 'orange'] },
-          { type: 'password' },
-        ],
-        colHeaders: ['value<br>underneath', 'type:text', 'type:numeric', 'type:checkbox', 'type:dropdown', 'type:password'],
-      });
-    </script>
+          columns: [
+            {
+              columnSorting: {
+                indicator: false,
+                headerAction: false,
+                compareFunctionFactory: function compareFunctionFactory() {
+                  return function comparator() {
+                    return 0; // Don't sort the first visual column.
+                  };
+                }
+              },
+              readOnly: true,
+            },
+            {},
+            {
+              type: 'numeric',
+              numericFormat: {
+                pattern: '$0,0.00',
+                culture: 'en-US' // this is the default culture, set up for USD
+              },
+            },
+            { type: 'checkbox' },
+            { type: 'dropdown', source: ['yellow', 'red', 'orange'] },
+            { type: 'password' },
+          ],
+          colHeaders: ['value<br>underneath', 'type:text', 'type:numeric', 'type:checkbox', 'type:dropdown', 'type:password'],
+        });</script>
+    </div>
 
     <p>Empty cells may be treated in differently in different contexts, for example, the <a href="/docs/<?js= version ?>/demo-sorting.html">ColumnSorting</a> plugin
       has a <code>sortEmptyCells</code> option responsible for establishing whether empty cells should be sorted like non-empty cells.
