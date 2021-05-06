@@ -1,6 +1,50 @@
 <div class="static-content">
 
   <div class="example-container clearfix">
+    <h3>8.4.0</h3>
+    <p>Released on 6th of May, 2021</p>
+    <strong>Added</strong>
+    <ul>
+      <li>Introduced a <code>separated</code> attribute for the label options (the <code>label</code> DOM element
+        may wrap <code>input</code> or be placed next to it). (<a href="https://github.com/handsontable/handsontable/issues/3172" target="_blank">#3172</a>)</li>
+      <li>Introduced the <code>modifyAutoColumnSizeSeed</code> hook to let developers overwrite the default
+        behaviour of the AutoColumnSize sampling. (<a href="https://github.com/handsontable/handsontable/issues/3339" target="_blank">#3339</a>)</li>
+      <li>Added support for hiding columns for the NestedHeaders plugin. (<a href="https://github.com/handsontable/handsontable/issues/6879" target="_blank">#6879</a>)</li>
+      <li>Added ability to skip stacking actions by the UndoRedo plugin and introduced new hooks. (<a href="https://github.com/handsontable/handsontable/issues/6948" target="_blank">#6948</a>)</li>
+    </ul>
+    <strong>Fixed</strong>
+    <ul>
+      <li>Fixed a problem with sorting the <code>checkbox</code>-typed cells and an issue with empty cells
+        not being displayed properly. (<a href="https://github.com/handsontable/handsontable/issues/4047" target="_blank">#4047</a>)</li>
+      <li>Fixed a problem where undoing the removal of row with <code>readOnly</code> cells was not performed
+        properly. (<a href="https://github.com/handsontable/handsontable/issues/4754" target="_blank">#4754</a>)</li>
+      <li>Fixed state-change resolving for externally added checkboxes. (<a href="https://github.com/handsontable/handsontable/issues/5934" target="_blank">#5934</a>)</li>
+      <li>Fixed a bug where number of columns rendered in the viewport was not correct. (<a href="https://github.com/handsontable/handsontable/issues/6115" target="_blank">#6115</a>)</li>
+      <li>Fixed a bug with the Dropdown Menu not opening on Android devices. (<a href="https://github.com/handsontable/handsontable/issues/6212" target="_blank">#6212</a>)</li>
+      <li>Fixed the double-tap issue on iOS. (<a href="https://github.com/handsontable/handsontable/issues/6961" target="_blank">#6961</a>)</li>
+      <li>Fixed a problem with the Comments editor being destroyed after destroying another Handsontable
+        instance. (<a href="https://github.com/handsontable/handsontable/issues/7091" target="_blank">#7091</a>)</li>
+      <li>Fixed incorrect <code>numericFormat</code>'s type definition. (<a href="https://github.com/handsontable/handsontable/issues/7420" target="_blank">#7420</a>)</li>
+      <li>Fixed the <code>trimWhitespace</code> tests on Firefox. (<a href="https://github.com/handsontable/handsontable/issues/7593" target="_blank">#7593</a>)</li>
+      <li>Fixed the cellTypes modules' paths in the exports entry in the <code>package.json</code> file. (<a href="https://github.com/handsontable/handsontable/issues/7597" target="_blank">#7597</a>)</li>
+      <li>Fixed the [NPM Audit] Github Action job to report found vulnerabilities. (<a href="https://github.com/handsontable/handsontable/issues/7621" target="_blank">#7621</a>)</li>
+      <li>Fixed some minor iOS problems. (<a href="https://github.com/handsontable/handsontable/issues/7659" target="_blank">#7659</a>)</li>
+      <li>Fixed the TypeScript definition for the suspended rendering feature. (<a href="https://github.com/handsontable/handsontable/issues/7666" target="_blank">#7666</a>)</li>
+      <li>Fixed the <code>postbuild</code> and <code>examples:install</code> scripts on Windows. (<a href="https://github.com/handsontable/handsontable/issues/7680" target="_blank">#7680</a>)</li>
+      <li>Fixed the contents of the production <code>package.json</code>. (<a href="https://github.com/handsontable/handsontable/issues/7723" target="_blank">#7723</a>)</li>
+      <li>Fixed an issue, where the callbacks for the UndoRedo plugin were called twice. (<a href="https://github.com/handsontable/handsontable/issues/7825" target="_blank">#7825</a>)</li>
+      <li><i>Vue:</i> Fixed a problem with displaying and removing rows in the Nested Rows plugin. (<a href="https://github.com/handsontable/handsontable/issues/7548" target="_blank">#7548</a>)</li>
+      <li><i>Vue:</i> Fixed vulnerabilities with the Remote Code Execution in the dev dependencies. (<a href="https://github.com/handsontable/handsontable/issues/7620" target="_blank">#7620</a>)</li>
+      <li><i>React:</i> Fixed an incompatibility in the property type definitions for the HotColumn component. (<a href="https://github.com/handsontable/handsontable/issues/7612" target="_blank">#7612</a>)</li>
+    </ul>
+    <strong>Changed</strong>
+    <ul>
+      <li>Enhanced the ESLint config file by adding a rule that checks if there are new lines missing before some keywords or
+        statements. (<a href="https://github.com/handsontable/handsontable/issues/7691" target="_blank">#7691</a>)</li>
+    </ul>
+  </div>
+
+  <div class="example-container clearfix">
     <h3>8.3.2</h3>
     <p>Released on 16th of March, 2021</p>
     <strong>Added</strong>
