@@ -1,6 +1,27 @@
 <div class="static-content">
 
   <div class="example-container clearfix">
+    <h3>9.0.0</h3>
+    <p>Released on 26th of May, 2021</p>
+    <strong>Changed</strong>
+    <ul>
+      <li><b>Breaking change</b> New Formulas plugin, with an entirely different API. See the migration guide for a full list of changes. Removed the required <code>hot-formula-parser</code> dependency for the sake of an optional one, <code>hyperformula</code>. (<a href="https://github.com/handsontable/handsontable/issues/6466" target="_blank">#6466</a>)</li>
+      <li><b>Breaking change</b> Changed the <code>afterAutofill</code> and <code>beforeAutofill</code> hooks' signatures. (<a href="https://github.com/handsontable/handsontable/issues/7987" target="_blank">#7987</a>)</li>
+      <li>Upgraded <code>eslint</code> and eslint-related modules. (<a href="https://github.com/handsontable/handsontable/issues/7531" target="_blank">#7531</a>)</li>
+    </ul>
+
+    <strong>Fixed</strong>
+    <ul>
+      <li>Fixed a problem with the column indicator of the Collapsible Columns plugin not being displayed properly on styled headers. (<a href="https://github.com/handsontable/handsontable/issues/7970" target="_blank">#7970</a>)</li>
+    </ul>
+
+    <strong>Removed</strong>
+    <ul>
+      <li><b>Breaking change</b> Removed the deprecated plugins - Header Tooltips and Observe Changes. (<a href="https://github.com/handsontable/handsontable/issues/8083" target="_blank">#8083</a>)</li>
+    </ul>
+  </div>
+
+  <div class="example-container clearfix">
     <h3>8.4.0</h3>
     <p>Released on 11th of May, 2021</p>
     <strong>Added</strong>

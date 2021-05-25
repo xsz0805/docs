@@ -122,10 +122,6 @@
           "moving": {
             "title": "Moving"
           },
-          "header-tooltips": {
-            "title": "Header tooltips [deprecated]",
-            "pro": true
-          },
           "pre-populating": {
             "title": "Pre-populating rows"
           },
