@@ -8,16 +8,28 @@
       <li><b>Breaking change</b> New Formulas plugin, with an entirely different API. See the migration guide for a full list of changes. Removed the required <code>hot-formula-parser</code> dependency for the sake of an optional one, <code>hyperformula</code>. (<a href="https://github.com/handsontable/handsontable/issues/6466" target="_blank">#6466</a>)</li>
       <li><b>Breaking change</b> Changed the <code>afterAutofill</code> and <code>beforeAutofill</code> hooks' signatures. (<a href="https://github.com/handsontable/handsontable/issues/7987" target="_blank">#7987</a>)</li>
       <li>Upgraded <code>eslint</code> and eslint-related modules. (<a href="https://github.com/handsontable/handsontable/issues/7531" target="_blank">#7531</a>)</li>
+      <li>Added <code>fit</code> & <code>fdescribe</code> to restricted globals in test files. (<a href="https://github.com/handsontable/handsontable/issues/8088" target="_blank">#8088</a>)</li>
     </ul>
 
     <strong>Fixed</strong>
     <ul>
       <li>Fixed a problem with the column indicator of the Collapsible Columns plugin not being displayed properly on styled headers. (<a href="https://github.com/handsontable/handsontable/issues/7970" target="_blank">#7970</a>)</li>
+      <li>Fixed a problem with formulas not being calculated in certain conditions. (<a href="https://github.com/handsontable/handsontable/issues/4430" target="_blank">#4430</a>)</li>
+      <li>Fixed a bug with formulas displaying incorrect values after inserting new rows. (<a href="https://github.com/handsontable/handsontable/issues/4654" target="_blank">#4654</a>)</li>
+      <li>Fixed a problem with the <code>AVARAGE</code> formula being updated incorrectly. (<a href="https://github.com/handsontable/handsontable/issues/4675" target="_blank">#4675</a>)</li>
+      <li>Fixed a problem with the <code>IF</code> formulas not working properly. (<a href="https://github.com/handsontable/handsontable/issues/5870" target="_blank">#5870</a>)</li>
+      <li>Fixed a bug with using the <code>clear</code> method broke the formulas in the table. (<a href="https://github.com/handsontable/handsontable/issues/6248" target="_blank">#6248</a>)</li>
+      <li>Fixed problems with calculating formulas added in the <code>beforeChange</code> hook callback. (<a href="https://github.com/handsontable/handsontable/issues/6932" target="_blank">#6932</a>)</li>
     </ul>
 
     <strong>Removed</strong>
     <ul>
       <li><b>Breaking change</b> Removed the deprecated plugins - Header Tooltips and Observe Changes. (<a href="https://github.com/handsontable/handsontable/issues/8083" target="_blank">#8083</a>)</li>
+    </ul>
+
+    <strong>Deprecated</strong>
+    <ul>
+      <li>Deprecated the <code>beforeAutofillInsidePopulate</code> hook. It will be removed in the next major release. (<a href="https://github.com/handsontable/handsontable/issues/8095" target="_blank">#8095</a>)</li>
     </ul>
   </div>
 
