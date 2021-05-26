@@ -1,11 +1,15 @@
 <div class="static-content">
   <div class="example-container clearfix">
-      <h3>Migrating from 8 to 9</h3>
+      <h2 id="migrating-from-8-to-9">Migrating from 8 to 9</h2>
       <p>
-        The purpose of this guide is to make it easier to migrate from v8.4.0 to v9.0.0. In the version 9.0 we have introduced a new formula engine with has completely replaced the previous one.
+        The purpose of this guide is to make it easier to migrate from v8.4.0 to v9.0.0.
+      </p>
+      <h3 id="9.0.0-formulas-plugin">Formulas plugin</h3>
+      <p>
+        In the version 9.0 we have introduced a new formula engine with has completely replaced the previous one.
         There is a breaking change in the formula API - even in the way the plugin itself is initialized.
       </p>
-      <h4>Plugin initialization</h4>
+      <h4 id="9.0.0-formulas-plugin-initialization">Plugin initialization</h4>
       <p>The plugin uses HyperFormula, which is meant to be passed in as an external dependency every time you want to initialize the plugin. HyperFormula installation guide is available <a href="https://handsontable.github.io/hyperformula/guide/client-side-installation.html">here</a>.</p>
 
       <table>
@@ -27,7 +31,7 @@
 
       <p>See other available initialization methods <a href="/docs/<?js= version ?>/demo-hyperformula-integration.html#initialization-methods">here</a>.</p>
 
-      <h4>Available methods</h4>
+      <h4 id="9.0.0-available-methods">Available methods</h4>
 
       <style>
         table.available-methods {
@@ -119,7 +123,31 @@
       <h4>Available functions</h4>
       <a href="https://cdn.jsdelivr.net/npm/hyperformula/dist/hyperformula.full.min.js">The list of available functions can be found here</a>.
 
-      <h3>Migrating from 7 to 8</h3>
+      <h3 id="9.0.0-autofill-hooks">Autofill hooks</h3>
+      <p>To make autofill hooks more consistent and more powerful, <code>beforeAutofill</code> and <code>afterAutofill</code> hooks have had their signatures changed.</p>
+      <p>Before 9.0.0:</p>
+      <pre><code class="lang-js">new Handsontable(container, {
+  data,
+  beforeAutofill(start, end, data) {},
+  afterAutofill(start, end, data) {}
+})</code></pre>
+
+      <p>After:</p>
+      <pre><code class="lang-js">new Handsontable(container, {
+  data,
+  beforeAutofill(selectionData, sourceRange, targetRange, direction) {
+    targetRange.from // used to be `start`
+    targetRange.to // used to be `end`
+    selectionData // used to be `data`
+  },
+  afterAutofill(fillData, sourceRange, targetRange, direction) {
+    targetRange.from // used to be `start`
+    targetRange.to // used to be `end`
+    fillData // used to be `data`
+  }
+})</code></pre>
+
+      <h2>Migrating from 7 to 8</h2>
       <p>
         The purpose of the following guide is to facilitate a smoother update to the 8.0.0 version of Handsontable.
         We strongly recommend an upgrade to make use of all beneficial changes and fixes brought by the introduction of the completely new architecture for row and column management.
