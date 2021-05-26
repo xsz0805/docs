@@ -149,16 +149,17 @@
       <pre><code class="lang-js">new Handsontable(container, {
   data,
   beforeAutofill(selectionData, sourceRange, targetRange, direction) {
-    targetRange.from // used to be `start`
-    targetRange.to // used to be `end`
-    selectionData // used to be `data`
+    const start = targetRange.from // used to be `start`
+    const end = targetRange.to // used to be `end`
+    const data = selectionData // used to be `data`
   },
   afterAutofill(fillData, sourceRange, targetRange, direction) {
-    targetRange.from // used to be `start`
-    targetRange.to // used to be `end`
-    fillData // used to be `data`
+    const start = targetRange.from // used to be `start`
+    const end = targetRange.to // used to be `end`
+    const data = fillData // used to be `data`
   }
 })</code></pre>
+      <p>In <code>beforeAutofill</code> instead of mutating <code>data</code>, you can now just return a new array of arrays with your desired fill pattern.</p>
 
       <h2 id="migrating-from-7-to-8">Migrating from 7 to 8</h2>
       <p>
