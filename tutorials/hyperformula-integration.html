@@ -244,6 +244,55 @@ new Handsontable(element, {
   afterFormulasValuesUpdate
 })</code></pre>
 
+    <h3 id="named-expressions">Named expressions</h3>
+    <p>You can use custom named expressions in your formula expressions. Named expression can be either plain values, or formulas with references to absolute cell address. To register a named expression, pass an array with <code>name</code> and <code>expression</code> to your <code>formulas</code> configuration object:</p>
+
+    <div id="example-named-expressions" class="hot"></div>
+
+    <form id="named-expressions-form">
+      <input id="named-expressions-calculate-input" value="=10 * Sheet1!$A$2" title="Extra cost" placeholder="Extra cost">
+      <button type="submit" class="intext-btn">Calculate price</button>
+    </form>
+
+    <div class="codeLayout">
+      <script>
+        var data = [
+          ['Travel ID', 'Destination', 'Base price', 'Price with extra cost'],
+          ['154', 'Rome', 400, '=ROUND(ADDITIONAL_COST+C2,0)'],
+          ['155', 'Athens', 300, '=ROUND(ADDITIONAL_COST+C3,0)'],
+          ['156', 'Warsaw', 150, '=ROUND(ADDITIONAL_COST+C4,0)']
+        ];
+
+        var container = document.getElementById('example-named-expressions');
+
+        var hotNamedExpressions = new Handsontable(container, {
+          data: data,
+          colHeaders: true,
+          rowHeaders: true,
+          formulas: {
+            engine: HyperFormula,
+            namedExpressions: [
+              {
+                name: 'ADDITIONAL_COST',
+                expression: 100
+              }
+            ]
+          }
+        });
+
+        var input = document.getElementById("named-expressions-calculate-input");
+        var formulasPlugin = hotNamedExpressions.getPlugin('formulas');
+
+        var form = document.getElementById("named-expressions-form");
+        form.addEventListener('submit', function(event) {
+          event.preventDefault();
+          formulasPlugin.engine.changeNamedExpression('ADDITIONAL_COST', input.value);
+        })
+      </script>
+    </div>
+
+    <p>For more information about named expressions, please refer to the <a href="https://handsontable.github.io/hyperformula/guide/named-ranges.html">HyperFormula docs</a>.</p>
+
     <h3 id="view-the-explainer-video">View the explainer video</h3>
     <iframe width="100%" height="425px" src="https://www.youtube.com/embed/JJXUmACTDdk"></iframe>
 
