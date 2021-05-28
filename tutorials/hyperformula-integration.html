@@ -5,10 +5,10 @@
 
     <h3 id="overview">Overview</h3>
     <p>
-      The <i>Formulas</i> plugin provides you an extensive calculation capabilities based on formulas with the spreadsheet notation. Under the hood it uses an engine called <a href="https://handsontable.github.io/hyperformula/">HyperFormula</a> created by the Handsontable team as an independent library to help developers build complex data management apps.
+      The <i>Formulas</i> plugin provides extensive calculation capabilities based on formulas using the spreadsheet notation. Under the hood, it uses an engine called <a href="https://handsontable.github.io/hyperformula/">HyperFormula</a> created by the Handsontable team as an independent library to help developers build complex data management apps.
     </p>
     <p>
-      This plugin comes with a library of 386 functions grouped into categories, such as Math and trigonometry, Engineering, Statistical, Financial, and Logical. Thanks to them you can create complex data entry rules in business apps, and many more. Below are some ideas on what you can do with it:
+      This plugin comes with a library of 386 functions grouped into categories, such as Math and trigonometry, Engineering, Statistical, Financial, and Logical. Using these, you can create complex data entry rules in business apps and much more. Below are some ideas on what you can do with it:
     </p>
     <p>
       <ul>
@@ -38,7 +38,7 @@
     <p><strong>Known limitations:</strong></p>
     <ul>
       <li>Doesn't work with nested rows</li>
-      <li>Doesn't work with undo redo</li>
+      <li>Doesn't work with undo/redo</li>
     </ul>
 
     <h3 id="available-options-and-methods">Available options and methods</h3>
@@ -48,12 +48,12 @@
 
     <h3 id="available-functions">Available functions</h3>
     <p>
-      This plugin inherits the calculation powers from <i>HyperFormula</i>, so the complete functions reference can be found in the <a href="https://handsontable.github.io/hyperformula/guide/built-in-functions.html">HyperFormula documentation</a>.
+      This plugin inherits the calculation powers from <i>HyperFormula</i>. The complete functions reference can be found in the <a href="https://handsontable.github.io/hyperformula/guide/built-in-functions.html">HyperFormula documentation</a>.
     </p>
 
     <h3 id="basic-multi-sheet-example">Basic multi-sheet example</h3>
 
-    <p>It is possible to use the plugin in single sheet mode or with multiple Handsontable instances with cross-sheet references.</p>
+    <p>It is possible to use the plugin in single sheet mode or multiple Handsontable instances with cross-sheet references.</p>
     <p>Double click on a cell to open the editor and preview the formula.</p>
 
     <div id="example-basic-multi-sheet-1" class="hot"></div>
@@ -100,7 +100,7 @@
     </div>
 
     <h3 id="data-grid-example">Data grid example</h3>
-    <p>This example is more typical to data grids than spreadsheets. Calculations are present in two places – in a column “Total due (fx)”, and in the summary row at the bottom.</p>
+    <p>This example is more typical of data grids than spreadsheets. Calculations are present in two places – in the column "Total due (fx)" and in the summary row at the bottom.</p>
 
     <div id="example-data-grid" class="hot"></div>
 
@@ -135,11 +135,11 @@
     </div>
 
     <h3 id="initialization-methods">Initialization methods</h3>
-    <p>There're multiple ways of initializing the plugin, you can select the most convenient one depending on your use case.</p>
+    <p>There're multiple ways of initializing the plugin. You can select the most convenient one depending on your use case.</p>
 
-    <p>In all cases it is required to either pass in the <code>HyperFormula</code> object or a HyperFormula instance:</p>
+    <p>In all cases, it is required to either pass in the <code>HyperFormula</code> object or a HyperFormula instance:</p>
     <pre><code class="hljs lang-javascript">import { HyperFormula } from 'hyperformula';</code></pre>
-    <p>There are also other installation methods available, check out <a href="https://handsontable.github.io/hyperformula/guide/client-side-installation.html">HyperFormula's installation documentation</a>.</p>
+    <p>There are also other installation methods available. Check out <a href="https://handsontable.github.io/hyperformula/guide/client-side-installation.html">HyperFormula's installation documentation</a>.</p>
 
 
     <!-- todo should we write demos for these? -->
@@ -157,7 +157,7 @@
       hyperformula: HyperFormula, // or `engine: hyperformulaInstance`
       leapYear1900: false,
       binarySearchThreshold: 15,
-      // ... and more engine configuration options. See https://handsontable.github.io/hyperformula/api/interfaces/configparams.html#number 
+      // ...and more engine configuration options. See https://handsontable.github.io/hyperformula/api/interfaces/configparams.html#number 
     },
     // [plugin configuration]
   }
@@ -245,7 +245,7 @@ new Handsontable(element, {
 })</code></pre>
 
     <h3 id="named-expressions">Named expressions</h3>
-    <p>You can use custom named expressions in your formula expressions. Named expression can be either plain values, or formulas with references to absolute cell address. To register a named expression, pass an array with <code>name</code> and <code>expression</code> to your <code>formulas</code> configuration object:</p>
+    <p>You can use custom-named expressions in your formula expressions. A named expression can be either plain values or formulas with references to absolute cell addresses. To register a named expression, pass an array with <code>name</code> and <code>expression</code> to your <code>formulas</code> configuration object:</p>
 
     <div id="example-named-expressions" class="hot"></div>
 
