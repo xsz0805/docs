@@ -1,6 +1,221 @@
 <div class="static-content">
+  <div class="index-list">
+    <ul>
+      <li>
+        <a href="#migrating-from-8-to-9">Migrating from 8 to 9</a>
+        <ul>
+          <li><a href="#9.0.0-formulas-plugin">Formulas plugin</a></li>
+          <li><a href="#9.0.0-autofill-hooks">Autofill hooks</a></li>
+          <li><a href="#9.0.0-removed-plugins">Removed plugins</a></li>
+        </ul>
+      </li>
+      <li><a href="#migrating-from-7-to-8">Migrating from 7 to 8</a></li>
+    </ul>
+  </div>
+
   <div class="example-container clearfix">
-      <h3>Migrating from 7 to 8</h3>
+      <h2 id="migrating-from-8-to-9">Migrating from 8 to 9</h2>
+      <p>
+        The purpose of this guide is to make it easier to migrate from v8.4.0 to v9.0.0.
+      </p>
+      <h3 id="9.0.0-formulas-plugin">Formulas plugin</h3>
+      <p>
+        In the version 9.0 we have introduced a new formula engine with has completely replaced the previous one.
+        There is a breaking change in the formula API - even in the way the plugin itself is initialized.
+      </p>
+      <h4 id="9.0.0-formulas-plugin-initialization">Plugin initialization</h4>
+      <p>The plugin uses HyperFormula, which is meant to be passed in as an external dependency every time you want to initialize the plugin. HyperFormula installation guide is available <a href="https://handsontable.github.io/hyperformula/guide/client-side-installation.html">here</a>.</p>
+
+      <table>
+        <tr style="font-weight: bold; background: #f7f7f7";>
+          <td>Before 9.0 (legacy plugin)</td>
+          <td>After 9.0 (new plugin)</td>
+        </tr>
+        <tr>
+          <td>
+            <pre><code class="hljs lang-javascript">formulas: true</code></pre>
+          </td>
+          <td>
+            <pre><code class="hljs lang-javascript">import { HyperFromula } from 'hyperformula';</code><code class="hljs lang-javascript">formulas: {
+  engine: HyperFormula
+}</code></pre>
+          </td>
+        </tr>
+      </table>
+
+      <p>See other available initialization methods <a href="/docs/<?js= version ?>/demo-hyperformula-integration.html#initialization-methods">here</a>.</p>
+
+      <h4 id="9.0.0-available-methods">Available methods</h4>
+
+      <style>
+        table.available-methods {
+          font-size: 0.75em;
+          table-layout: fixed;
+        }
+
+        table.available-methods td {
+          width: 33%;
+        }
+
+        table.available-methods code {
+          word-break: break-all;
+          font-size: 0.75em;
+        }
+
+        table.available-methods td:nth-child(2) code, table.available-methods td:nth-child(3) code {
+          font-size: 13px !important;
+        }
+      </style>
+
+      <table class="available-methods">
+        <tr style="font-weight: bold; background: #f7f7f7";>
+          <td width="33%">Method name</td>
+          <td width="33%">Before 9.0 (legacy plugin)</td>
+          <td width="33%">After 9.0 (new plugin)</td>
+        </tr>
+        <tr>
+          <td><a href="https://handsontable.com/docs/8.4.0/Formulas.html#destroy"><code>destroy</code></a></td>
+          <td><code>hot.getPlugin('formulas').destroy()</code></td>
+          <td>Unchanged. This method will destroy the HyperFormula instance only after it is disconnected from all Handsontable instances.</td>
+        </tr>
+        <tr>
+          <td><a href="https://handsontable.com/docs/8.4.0/Formulas.html#disablePlugin"><code>disablePlugin</code></a></td>
+          <td><code>hot.getPlugin('formulas').disablePlugin()</code></td>
+          <td>Unchanged.</td>
+        </tr>
+        <tr>
+          <td><a href="https://handsontable.com/docs/8.4.0/Formulas.html#enablePlugin"><code>enablePlugin</code></a></td>
+          <td><code>hot.getPlugin('formulas').enablePlugin()</code></td>
+          <td>Unchanged, but do keep in mind that if you didn't pass in the plugin's config through either <code>updateSettings</code> or during Handsontable initialization this method will not do anything.</td>
+        </tr>
+        <tr>
+          <td><a href="https://handsontable.com/docs/8.4.0/Formulas.html#getCellValue"><code>getCellValue</code></a></td>
+          <td><code>hot.getPlugin('formulas').getCellValue(row, column)</code></td>
+          <td>Use base Handsontable API instead, for example <code>hot.getDataAtCell(row, column)</code>.</td>
+        </tr>
+        <tr>
+          <td><a href="https://handsontable.com/docs/8.4.0/Formulas.html#getVariable"><code>getVariable</code></a></td>
+          <td><code>hot.getPlugin('formulas').getVariable(variableName)</code></td>
+          <td>
+            "Variables" in the plugin have been replaced by a more powerful alternative, <a href="/docs/<?js= version ?>/demo-hyperformula-integration.html#named-expressions"><i>named expressions</i></a>
+          </td>.
+        </tr>
+        <tr>
+          <td><a href="https://handsontable.com/docs/8.4.0/Formulas.html#hasComputedCellValue"><code>hasComputedCellValue</code></a></td>
+          <td><code>hot.getPlugin('formulas').hasComputedCellValue(row, column)</code></td>
+          <td><code>hot.getPlugin('formulas').getCellType(row, column) === 'FORMULA'</code></td>
+        </tr>
+        <tr>
+          <td><a href="https://handsontable.com/docs/8.4.0/Formulas.html#isEnabled"><code>isEnabled</code></a></td>
+          <td><code>hot.getPlugin('formulas').isEnabled()</code></td>
+          <td>Unchanged.</td>
+        </tr>
+        <tr>
+          <td><a href="https://handsontable.com/docs/8.4.0/Formulas.html#recalculate"><code>recalculate</code></a></td>
+          <td><code>hot.getPlugin('formulas').recalculate()</code></td>
+          <td><code>hot.getPlguin('formulas').engine.rebuildAndRecalculate()</code></td>
+        </tr>
+        <tr>
+          <td><a href="https://handsontable.com/docs/8.4.0/Formulas.html#recalculateFull"><code>recalculateFull</code></a></td>
+          <td><code>hot.getPlugin('formulas').recalculateFull()</code></td>
+          <td><code>hot.getPlguin('formulas').engine.rebuildAndRecalculate()</code></td>
+        </tr>
+        <tr>
+          <td><a href="https://handsontable.com/docs/8.4.0/Formulas.html#recalculateOptimized"><code>recalculateOptimized</code></a></td>
+          <td><code>hot.getPlugin('formulas').recalculateOptimized()</code></td>
+          <td><code>hot.getPlguin('formulas').engine.rebuildAndRecalculate()</code></td>
+        </tr>
+        <tr>
+          <td><a href="https://handsontable.com/docs/8.4.0/Formulas.html#setVariable"><code>setVariable</code></a></td>
+          <td><code>hot.getPlugin('formulas').setVariable(variableName, value)</code></td>
+          <td>
+            "Variables" in the plugin have been replaced by a more powerful alternative, <a href="/docs/<?js= version ?>/demo-hyperformula-integration.html#named-expressions"><i>named expressions</i></a>
+          </td>.
+        </tr>
+      </table>
+
+      <h4>Available functions</h4>
+      <a href="https://cdn.jsdelivr.net/npm/hyperformula/dist/hyperformula.full.min.js">The list of available functions can be found here</a>.
+
+      <h3 id="9.0.0-autofill-hooks">Autofill hooks</h3>
+      <p>To make autofill hooks more consistent and more powerful, <code>beforeAutofill</code> and <code>afterAutofill</code> hooks have had their signatures changed.</p>
+      <p>Before 9.0.0:</p>
+      <pre><code class="lang-js">new Handsontable(container, {
+  data,
+  beforeAutofill(start, end, data) {},
+  afterAutofill(start, end, data) {}
+})</code></pre>
+
+      <p>After:</p>
+      <pre><code class="lang-js">new Handsontable(container, {
+  data,
+  beforeAutofill(selectionData, sourceRange, targetRange, direction) {
+    const start = targetRange.from // used to be `start`
+    const end = targetRange.to // used to be `end`
+    const data = selectionData // used to be `data`
+  },
+  afterAutofill(fillData, sourceRange, targetRange, direction) {
+    const start = targetRange.from // used to be `start`
+    const end = targetRange.to // used to be `end`
+    const data = fillData // used to be `data`
+  }
+})</code></pre>
+      <p>In <code>beforeAutofill</code> instead of mutating <code>data</code>, you can now just return a new array of arrays with your desired fill pattern.</p>
+
+      <h3 id="9.0.0-removed-plugins">Removed plugins</h3>
+      <p>In Handsontable <code>9.0.0</code> we removed the following, previously-deprecated plugins:</p>
+      <ul>
+        <li>Header Tooltips</li>
+        <li>Observe Changes</li>
+      </ul>
+      <h4>Header Tooltips</h4>
+      <p>
+        To implement functionality similar to that of the Header Tooltips plugin, you can utilize the <code>
+        afterGetColHeader</code> and <code>afterGetRowHeader</code> hooks to add a <code>title</code> attribute to the
+        headers.<br>
+        See the snippet below for example implementation.
+      </p>
+
+      <div data-jsfiddle="tooltip-example">
+        <div id="tooltip-example" class="hot"></div>
+      </div>
+
+      <div class="codeLayout">
+        <div class="buttons">
+          <button class="jsFiddleLink" data-runfiddle="tooltip-example">
+            <i class="fa fa-jsfiddle"></i>
+            Edit
+          </button>
+          <button class="dump" name="dump" data-dump="#tooltip-example" data-instance="hot"
+                  title="Print current data source to console">
+            <i class="fa fa-terminal"></i>
+            Log to console
+          </button>
+        </div>
+        <script data-jsfiddle="tooltip-example">
+          var example = document.getElementById('tooltip-example');
+          var onAfterGetHeader = function(index, TH) {
+            TH.setAttribute('title', TH.querySelector('span').textContent);
+          };
+
+          var hot1 = new Handsontable(example, {
+            data: Handsontable.helper.createSpreadsheetData(3, 3),
+            rowHeights: 23,
+            autoColumnSize: true,
+            rowHeaders: ['1st', '2nd', '3rd'],
+            colHeaders: ['First Column', 'Second Column', 'Third Column'],
+            licenseKey: 'non-commercial-and-evaluation',
+            afterGetColHeader: onAfterGetHeader,
+            afterGetRowHeader: onAfterGetHeader
+          });</script>
+      </div>
+
+      <h4>Observe Changes</h4>
+      <p>The plugin fired the <code>afterChangesObserved</code> hook. Be sure to stop listening to it after updating
+        to version <code>9.0.0+</code>.</p>
+
+
+      <h2 id="migrating-from-7-to-8">Migrating from 7 to 8</h2>
       <p>
         The purpose of the following guide is to facilitate a smoother update to the 8.0.0 version of Handsontable.
         We strongly recommend an upgrade to make use of all beneficial changes and fixes brought by the introduction of the completely new architecture for row and column management.
@@ -542,7 +757,7 @@ beforeRowResize?: (newSize: number, row: number, isDoubleClick: boolean) => numb
       </p>
   </div>
   <p>
-    <a href="https://github.com/handsontable/docs/edit/<?js= version ?>/tutorials/introduction.html"
+    <a href="https://github.com/handsontable/docs/edit/<?js= version ?>/tutorials/migration-guide.html"
        class="edit-doc" target="_blank">Edit this page</a>
   </p>
 </div>

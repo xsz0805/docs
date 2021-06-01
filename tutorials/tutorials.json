@@ -302,9 +302,11 @@
         "title": "Formulas",
         "demo": true,
         "children": {
+          "hyperformula-integration": {
+            "title": "HyperFormula Integration"
+          },
           "formula-support": {
-            "title": "Formula support",
-            "pro": true
+            "title": "Formula support (legacy)"
           }
         }
       },
