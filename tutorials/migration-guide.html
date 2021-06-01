@@ -6,6 +6,7 @@
         <ul>
           <li><a href="#9.0.0-formulas-plugin">Formulas plugin</a></li>
           <li><a href="#9.0.0-autofill-hooks">Autofill hooks</a></li>
+          <li><a href="#9.0.0-removed-plugins">Removed plugins</a></li>
         </ul>
       </li>
       <li><a href="#migrating-from-7-to-8">Migrating from 7 to 8</a></li>
@@ -160,6 +161,59 @@
   }
 })</code></pre>
       <p>In <code>beforeAutofill</code> instead of mutating <code>data</code>, you can now just return a new array of arrays with your desired fill pattern.</p>
+
+      <h3 id="9.0.0-removed-plugins">Removed plugins</h3>
+      <p>In Handsontable <code>9.0.0</code> we removed the following, previously-deprecated plugins:</p>
+      <ul>
+        <li>Header Tooltips</li>
+        <li>Observe Changes</li>
+      </ul>
+      <h4>Header Tooltips</h4>
+      <p>
+        To implement functionality similar to that of the Header Tooltips plugin, you can utilize the <code>
+        afterGetColHeader</code> and <code>afterGetRowHeader</code> hooks to add a <code>title</code> attribute to the
+        headers.<br>
+        See the snippet below for example implementation.
+      </p>
+
+      <div data-jsfiddle="tooltip-example">
+        <div id="tooltip-example" class="hot"></div>
+      </div>
+
+      <div class="codeLayout">
+        <div class="buttons">
+          <button class="jsFiddleLink" data-runfiddle="tooltip-example">
+            <i class="fa fa-jsfiddle"></i>
+            Edit
+          </button>
+          <button class="dump" name="dump" data-dump="#tooltip-example" data-instance="hot"
+                  title="Print current data source to console">
+            <i class="fa fa-terminal"></i>
+            Log to console
+          </button>
+        </div>
+        <script data-jsfiddle="tooltip-example">
+          var example = document.getElementById('tooltip-example');
+          var onAfterGetHeader = function(index, TH) {
+            TH.setAttribute('title', TH.querySelector('span').textContent);
+          };
+
+          var hot1 = new Handsontable(example, {
+            data: Handsontable.helper.createSpreadsheetData(3, 3),
+            rowHeights: 23,
+            autoColumnSize: true,
+            rowHeaders: ['1st', '2nd', '3rd'],
+            colHeaders: ['First Column', 'Second Column', 'Third Column'],
+            licenseKey: 'non-commercial-and-evaluation',
+            afterGetColHeader: onAfterGetHeader,
+            afterGetRowHeader: onAfterGetHeader
+          });</script>
+      </div>
+
+      <h4>Observe Changes</h4>
+      <p>The plugin fired the <code>afterChangesObserved</code> hook. Be sure to stop listening to it after updating
+        to version <code>9.0.0+</code>.</p>
+
 
       <h2 id="migrating-from-7-to-8">Migrating from 7 to 8</h2>
       <p>
