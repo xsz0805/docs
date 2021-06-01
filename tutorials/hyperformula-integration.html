@@ -157,7 +157,7 @@
       hyperformula: HyperFormula, // or `engine: hyperformulaInstance`
       leapYear1900: false,
       binarySearchThreshold: 15,
-      // ...and more engine configuration options. See https://handsontable.github.io/hyperformula/api/interfaces/configparams.html#number 
+      // ...and more engine configuration options. See https://handsontable.github.io/hyperformula/api/interfaces/configparams.html#number
     },
     // [plugin configuration]
   }
@@ -287,7 +287,8 @@ new Handsontable(element, {
         form.addEventListener('submit', function(event) {
           event.preventDefault();
           formulasPlugin.engine.changeNamedExpression('ADDITIONAL_COST', input.value);
-        })
+          hotNamedExpressions.render();
+        });
       </script>
     </div>
 
